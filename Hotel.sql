@@ -151,3 +151,22 @@ CREATE TABLE Booking_Customer
   FOREIGN KEY (booking_id) REFERENCES Booking (booking_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade booking_id changes
   FOREIGN KEY (customer_id) REFERENCES Customer (customer_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade customer_id changes
 );
+
+-- Archive relation --
+DROP TABLE IF EXISTS Archive;
+CREATE TABLE Archive
+(
+    archive_id BIGINT AUTO_INCREMENT,
+    updated_at TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,  -- Last time this booking was updated (for archive purposes)
+    PRIMARY KEY(archive_id)
+);
+
+-- Booking_Archive relation --
+DROP TABLE IF EXISTS Booking_Archive;
+CREATE TABLE Booking_Archive
+(
+  booking_id BIGINT, -- Primary Key from Booking
+  archive_id BIGINT, -- Primary Key from Archive
+  FOREIGN KEY (booking_id) REFERENCES Booking (booking_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade booking_id changes
+  FOREIGN KEY (archive_id) REFERENCES Archive (archive_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade archive_id changes
+);
