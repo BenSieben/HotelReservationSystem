@@ -14,7 +14,7 @@ CREATE TABLE Customer
     first_name VARCHAR(35) NOT NULL, -- Customer's first name
     last_name VARCHAR(35), -- Customer's last name
     username VARCHAR(20) NOT NULL, -- Customer's username
-    password VARCHAR(20) NOT NULL, -- Customer's last name
+    password VARCHAR(20) NOT NULL, -- Customer's password
     age INT NOT NULL CHECK (age >= 18),  -- Customer's age
     PRIMARY KEY (customer_id),
     CONSTRAINT username_constraint UNIQUE (username)
@@ -57,7 +57,7 @@ DROP TABLE IF EXISTS Details;
 CREATE TABLE Details
 (
     details_id BIGINT AUTO_INCREMENT,
-    price DECIMAL(5, 2),  -- Decimal price which has 5 total digits, 2 of which are for the decimal
+    price DECIMAL(5, 2),  -- Decimal price which has 5 total digits, 2 of which are for the decimal (price per day)
     room_type VARCHAR(20),  -- The particular type of the room
     floor INT DEFAULT 2, -- Floor number of the room
     capacity INT DEFAULT 1,  -- Maximum number of people that is suggested for the room
@@ -73,10 +73,10 @@ ALTER TABLE Details AUTO_INCREMENT = 1001;
 DROP TABLE IF EXISTS Room_Details;
 CREATE TABLE Room_Details
 (
-  room_id BIGINT,  -- Primary Key from Room
-  details_id BIGINT,  -- Primary Key from Details
-  FOREIGN KEY (room_id) REFERENCES Room (room_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade room_id changes
-  FOREIGN KEY (details_id) REFERENCES Details (details_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade details_id changes
+    room_id BIGINT,  -- Primary Key from Room
+    details_id BIGINT,  -- Primary Key from Details
+    FOREIGN KEY (room_id) REFERENCES Room (room_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade room_id changes
+    FOREIGN KEY (details_id) REFERENCES Details (details_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade details_id changes
 );
 
 -- Payment relation --
@@ -116,40 +116,40 @@ ALTER TABLE Booking AUTO_INCREMENT = 1000001;
 DROP TABLE IF EXISTS Booking_Period;
 CREATE TABLE Booking_Period
 (
-  booking_id BIGINT, -- Primary Key from Booking
-  period_id BIGINT, -- Primary Key from Date
-  FOREIGN KEY (booking_id) REFERENCES Booking (booking_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade booking_id changes
-  FOREIGN KEY (period_id) REFERENCES Period (period_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade period_id changes
+    booking_id BIGINT, -- Primary Key from Booking
+    period_id BIGINT, -- Primary Key from Date
+    FOREIGN KEY (booking_id) REFERENCES Booking (booking_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade booking_id changes
+    FOREIGN KEY (period_id) REFERENCES Period (period_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade period_id changes
 );
 
 -- Booking_Payment relation --
 DROP TABLE IF EXISTS Booking_Payment;
 CREATE TABLE Booking_Payment
 (
-  booking_id BIGINT, -- Primary Key from Booking
-  payment_id BIGINT, -- Primary Key from Payment
-  FOREIGN KEY (booking_id) REFERENCES Booking (booking_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade booking_id changes
-  FOREIGN KEY (payment_id) REFERENCES Payment (payment_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade payment_id changes
+    booking_id BIGINT, -- Primary Key from Booking
+    payment_id BIGINT, -- Primary Key from Payment
+    FOREIGN KEY (booking_id) REFERENCES Booking (booking_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade booking_id changes
+    FOREIGN KEY (payment_id) REFERENCES Payment (payment_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade payment_id changes
 );
 
 -- Booking_Room relation --
 DROP TABLE IF EXISTS Booking_Room;
 CREATE TABLE Booking_Room
 (
-  booking_id BIGINT, -- Primary Key from Booking
-  room_id BIGINT, -- Primary Key from Room
-  FOREIGN KEY (booking_id) REFERENCES Booking (booking_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade booking_id changes
-  FOREIGN KEY (room_id) REFERENCES Room (room_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade room_id changes
+    booking_id BIGINT, -- Primary Key from Booking
+    room_id BIGINT, -- Primary Key from Room
+    FOREIGN KEY (booking_id) REFERENCES Booking (booking_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade booking_id changes
+    FOREIGN KEY (room_id) REFERENCES Room (room_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade room_id changes
 );
 
 -- Booking_Customer relation --
 DROP TABLE IF EXISTS Booking_Customer;
 CREATE TABLE Booking_Customer
 (
-  booking_id BIGINT, -- Primary Key from Booking
-  customer_id BIGINT, -- Primary Key from Customer
-  FOREIGN KEY (booking_id) REFERENCES Booking (booking_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade booking_id changes
-  FOREIGN KEY (customer_id) REFERENCES Customer (customer_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade customer_id changes
+    booking_id BIGINT, -- Primary Key from Booking
+    customer_id BIGINT, -- Primary Key from Customer
+    FOREIGN KEY (booking_id) REFERENCES Booking (booking_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade booking_id changes
+    FOREIGN KEY (customer_id) REFERENCES Customer (customer_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade customer_id changes
 );
 
 -- Archive relation --
@@ -165,8 +165,8 @@ CREATE TABLE Archive
 DROP TABLE IF EXISTS Booking_Archive;
 CREATE TABLE Booking_Archive
 (
-  booking_id BIGINT, -- Primary Key from Booking
-  archive_id BIGINT, -- Primary Key from Archive
-  FOREIGN KEY (booking_id) REFERENCES Booking (booking_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade booking_id changes
-  FOREIGN KEY (archive_id) REFERENCES Archive (archive_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade archive_id changes
+    booking_id BIGINT, -- Primary Key from Booking
+    archive_id BIGINT, -- Primary Key from Archive
+    FOREIGN KEY (booking_id) REFERENCES Booking (booking_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade booking_id changes
+    FOREIGN KEY (archive_id) REFERENCES Archive (archive_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade archive_id changes
 );
