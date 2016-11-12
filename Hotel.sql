@@ -170,3 +170,9 @@ CREATE TABLE Booking_Archive
     FOREIGN KEY (booking_id) REFERENCES Booking (booking_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade booking_id changes
     FOREIGN KEY (archive_id) REFERENCES Archive (archive_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade archive_id changes
 );
+
+-- Loading in initial data from text files in initialData folder --
+-- The directory of files is relative, so to run this as is, you must be calling this from the root
+    -- directory of the project. If not calling from root directory, the file locations must be changed
+    -- to absolute paths --
+LOAD DATA LOCAL INFILE './initialData/details.txt' INTO TABLE Details;
