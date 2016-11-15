@@ -9,12 +9,13 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 import javax.sql.DataSource;
+
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
- 
+
 class DataSourceFactory {
     public static DataSource getMySQLDataSource() {
-        
-    	Properties props = new Properties();
+
+        Properties props = new Properties();
         FileInputStream fis = null;
         MysqlDataSource mysqlDS = null;
         try {
@@ -25,10 +26,10 @@ class DataSourceFactory {
             mysqlDS.setUser(props.getProperty("MYSQL_DB_USERNAME"));
             mysqlDS.setPassword(props.getProperty("MYSQL_DB_PASSWORD"));
         } catch (IOException e) {
-        	System.out.println("db.properties is not found");
+            System.out.println("db.properties is not found");
             e.printStackTrace();
         }
         return mysqlDS;
-      
+
     }
 }
