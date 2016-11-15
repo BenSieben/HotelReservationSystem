@@ -1,7 +1,33 @@
+import javax.swing.*;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class HotelView {
+/**
+ * A JFrame used by the program to display
+ * the "view" of the program
+ */
+public class HotelView extends JFrame {
+
+    /**
+     * Constructs a brand new HotelView
+     */
+    public HotelView() {
+        super();
+
+        // Set up some constants for the JFrame
+        setTitle("Hotel Reservation System");
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);  // same as JFrame.EXIT_ON_CLOSE
+        setPreferredSize(new Dimension(500, 500));
+        setMinimumSize(new Dimension(500, 500));
+        setLocationRelativeTo(null); // will center the frame when it initially opens
+
+        //TODO Add the JPanels to the frame
+
+        //Finalize some constants for the JFrame
+        pack();
+        setVisible(true);
+    }
 
     public HashMap<String, Object> signUpView() {
         try {
