@@ -176,3 +176,4 @@ CREATE TABLE Booking_Archive
     -- directory of the project. If not calling from root directory, the file locations must be changed
     -- to absolute paths --
 LOAD DATA LOCAL INFILE './initialData/details.txt' INTO TABLE Details;
+LOAD DATA LOCAL INFILE './initialData/customer.txt' INTO TABLE Customer;

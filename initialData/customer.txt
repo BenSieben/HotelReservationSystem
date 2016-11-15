@@ -1,0 +1,10 @@
+	admin	admin	admin	admin	42
+	Luke	Skywalker	lskywalker	starwar	30
+	John	Smith	jsmith	js	23
+	Bruce	Almighty	balmighty	sovereign	19
+	Harry	Potter	hpotter	magicman	47
+	Crystal	Logan	clogan	test	26
+	Guy	Fieri	gfieri	tripled	29
+	Hillary	Cosby	hcosby	sleuth	34
+	Sarah	Johnson	sjohnson	summersurf	31
+	Bob	Jenkins	bjenkins	oldmanjenkins	80
