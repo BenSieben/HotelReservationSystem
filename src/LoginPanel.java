@@ -124,7 +124,7 @@ public class LoginPanel extends JPanel {
         this.createAccountUsername.setText("");
         this.createAccountPassword.setText("");
         this.createAccountAge.setText("");
-        this.messageLabel.setText("Any important messages will appear here");
+        this.messageLabel.setText("Any important error messages will appear here");
     }
 
     /**

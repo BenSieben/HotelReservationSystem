@@ -63,7 +63,7 @@ public class ManagerPanel extends JPanel{
         add(topPanel, BorderLayout.NORTH);
         add(middlePanel, BorderLayout.CENTER);
 
-        this.messageLabel = new JLabel("Any important messages will appear here", SwingConstants.CENTER);
+        this.messageLabel = new JLabel("Any important error messages will appear here", SwingConstants.CENTER);
         this.messageLabel.setForeground(Color.RED);
         this.messageLabel.setBackground(Color.LIGHT_GRAY);
         this.messageLabel.setOpaque(true);
