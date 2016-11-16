@@ -114,7 +114,7 @@ public class LoginPanel extends JPanel {
 
     /**
      * Clears all text fields in the panel to
-     * revert to empty strings
+     * revert to empty strings and other defaults
      */
     public void clearAllFields() {
         this.signInUsername.setText("");
@@ -124,6 +124,7 @@ public class LoginPanel extends JPanel {
         this.createAccountUsername.setText("");
         this.createAccountPassword.setText("");
         this.createAccountAge.setText("");
+        this.messageLabel.setText("Any important messages will appear here");
     }
 
     /**
