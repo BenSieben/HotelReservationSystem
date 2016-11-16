@@ -18,13 +18,25 @@ public class ManagerPanel extends JPanel{
     public ManagerPanel() {
         super();
 
-        // TODO implement real manager panel
+        // TODO implement real customer panel
+        setLayout(new BorderLayout());
 
-        JLabel header = new JLabel("Welcome, Manager!");
+        // Create top panel which lets manager log out
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        topPanel.setBackground(new Color(230, 204, 255));
+        JLabel welcomeLabel = new JLabel("Welcome, Manager!");
         this.logoutButton = new JButton("Logout");
 
-        add(header);
-        add(this.logoutButton);
+        // Create middle panel which lets manager perform actions
+        JPanel middlePanel = new JPanel();
+        middlePanel.setBackground(new Color(204, 153, 255));
+
+        // Add all panels to the manager panel
+        topPanel.add(this.logoutButton);
+        topPanel.add(welcomeLabel);
+        add(topPanel, BorderLayout.NORTH);
+        add(middlePanel, BorderLayout.CENTER);
     }
 
     /**
