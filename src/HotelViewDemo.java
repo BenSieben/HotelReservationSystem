@@ -33,7 +33,6 @@ public class HotelViewDemo {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         hv.changeCard(HotelView.LOGIN_PANEL);
-                        lp.setMessageLabel("Bye guest!");
                         lp.clearAllFields();
                     }
                 });
@@ -41,7 +40,6 @@ public class HotelViewDemo {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         hv.changeCard(HotelView.LOGIN_PANEL);
-                        lp.setMessageLabel("Bye manager!");
                         lp.clearAllFields();
                     }
                 });
