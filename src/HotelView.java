@@ -9,7 +9,16 @@ import java.util.Scanner;
  */
 public class HotelView extends JFrame {
 
+    // The different panels which can show up in the view
     private LoginPanel loginPanel;
+    private GuestPanel guestPanel;
+    private ManagerPanel managerPanel;
+
+    // The CardLayout JPanel and constants to refer to each of the panels the CardLayout JPanel holds
+    private JPanel cards; //  The CardLayout JPanel which holds all the panels for the frame
+    public final static String LOGIN_PANEL = "Login Panel";
+    public final static String GUEST_PANEL = "Guest Panel";
+    public final static String MANAGER_PANEL = "Manager Panel";
 
     /**
      * Constructs a brand new HotelView
@@ -20,17 +29,49 @@ public class HotelView extends JFrame {
         // Set up some constants for the JFrame
         setTitle("Hotel Reservation System");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);  // same as JFrame.EXIT_ON_CLOSE
-        setPreferredSize(new Dimension(500, 500));
-        setMinimumSize(new Dimension(500, 500));
+        setPreferredSize(new Dimension(1000, 700));
+        setMinimumSize(new Dimension(1000, 700));
         setLocationRelativeTo(null); // will center the frame when it initially opens
 
-        // TODO Add the JPanels to the frame
+        // Add all the panels to the cards JPanel, which uses CardLayout to flip
+        //   between the views (this behavior is facilitated through the changeCard
+        //   function below)
+        this.cards = new JPanel();
+        this.cards.setLayout(new CardLayout());
+
         this.loginPanel = new LoginPanel();
-        add(this.loginPanel);
+        this.guestPanel = new GuestPanel();
+        this.managerPanel = new ManagerPanel();
+
+        this.cards.add(this.loginPanel, HotelView.LOGIN_PANEL);
+        this.cards.add(this.guestPanel, HotelView.GUEST_PANEL);
+        this.cards.add(this.managerPanel, HotelView.MANAGER_PANEL);
+
+        add(this.cards);
 
         // Finalize some constants for the JFrame to make it visible
         pack();
         setVisible(true);
+    }
+
+    /**
+     * Changes the frame's currently shown JPanel to be
+     * the JPanel associated with the argument string,
+     * newCard (does nothing if newCard is invalid)
+     * @param newCard the string associated with the JPanel
+     *                to show (ex: HotelView.LOGIN_PANEL)
+     */
+    public void changeCard(String newCard) {
+        CardLayout cl = (CardLayout)(this.cards.getLayout());
+        if(LOGIN_PANEL.equals(newCard)
+                || GUEST_PANEL.equals(newCard)
+                || MANAGER_PANEL.equals(newCard)) {
+            cl.show(this.cards, newCard);
+        }
+        else {
+            //  Tell user that their newCard is unrecognizable
+            System.err.println("Error: newCard \"" + newCard + "\" is not recognized by HotelView!");
+        }
     }
 
     public HashMap<String, Object> signUpView() {
@@ -112,5 +153,21 @@ public class HotelView extends JFrame {
      */
     public LoginPanel getLoginPanel() {
         return this.loginPanel;
+    }
+
+    /**
+     * Returns the guest panel attached to the view
+     * @return the guest panel attached to the view
+     */
+    public GuestPanel getGuestPanel() {
+        return this.guestPanel;
+    }
+
+    /**
+     * Returns the manager panel attached to the view
+     * @return the manager panel attached to the view
+     */
+    public ManagerPanel getManagerPanel() {
+        return this.managerPanel;
     }
 }

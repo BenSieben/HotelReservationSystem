@@ -110,7 +110,20 @@ public class LoginPanel extends JPanel {
         this.messageLabel.setBackground(Color.LIGHT_GRAY);
         this.messageLabel.setOpaque(true);
         add(messageLabel, BorderLayout.SOUTH);
+    }
 
+    /**
+     * Clears all text fields in the panel to
+     * revert to empty strings
+     */
+    public void clearAllFields() {
+        this.signInUsername.setText("");
+        this.signInPassword.setText("");
+        this.createAccountFirstName.setText("");
+        this.createAccountLastName.setText("");
+        this.createAccountUsername.setText("");
+        this.createAccountPassword.setText("");
+        this.createAccountAge.setText("");
     }
 
     /**
