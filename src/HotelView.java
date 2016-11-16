@@ -22,9 +22,11 @@ public class HotelView extends JFrame {
         setMinimumSize(new Dimension(500, 500));
         setLocationRelativeTo(null); // will center the frame when it initially opens
 
-        //TODO Add the JPanels to the frame
+        // TODO Add the JPanels to the frame
+        LoginPanel lp = new LoginPanel();
+        add(lp);
 
-        //Finalize some constants for the JFrame
+        // Finalize some constants for the JFrame to make it visible
         pack();
         setVisible(true);
     }
