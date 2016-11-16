@@ -23,7 +23,7 @@ public class CustomerPanel extends JPanel {
      * for Customer
      */
     public CustomerPanel() {
-        this(DEFAULT_CUSTOMER_NAME);  // Use default customer nae
+        this(DEFAULT_CUSTOMER_NAME);  // Use default customer name
     }
 
     /**
