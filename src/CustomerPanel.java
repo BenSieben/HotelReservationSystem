@@ -18,6 +18,9 @@ public class CustomerPanel extends JPanel {
     // Field for the top panel
     private JButton logoutButton;
 
+    // One last label for drawing messages directed to user
+    private JLabel messageLabel;
+
     /**
      * Creates a new CustomerPanel with default name
      * for Customer
@@ -53,9 +56,15 @@ public class CustomerPanel extends JPanel {
         JPanel middlePanel = new JPanel();
         middlePanel.setBackground(new Color(255, 204, 102));
 
-        // Add all panels to the customer panel
+        // Add all panels to the customer panel (and message label)
         add(topPanel, BorderLayout.NORTH);
         add(middlePanel, BorderLayout.CENTER);
+
+        this.messageLabel = new JLabel("Any important messages will appear here", SwingConstants.CENTER);
+        this.messageLabel.setForeground(Color.RED);
+        this.messageLabel.setBackground(Color.LIGHT_GRAY);
+        this.messageLabel.setOpaque(true);
+        add(messageLabel, BorderLayout.SOUTH);
     }
 
     /**
@@ -81,6 +90,16 @@ public class CustomerPanel extends JPanel {
      */
     public void addLogoutButtonListener(ActionListener listener) {
         this.logoutButton.addActionListener(listener);
+    }
+
+    /**
+     * Sets the message on the login panel to be the newMessage
+     * @param newMessage text to place in the message label
+     */
+    public void setMessageLabel(String newMessage) {
+        if(newMessage != null) {
+            this.messageLabel.setText(newMessage);
+        }
     }
 
 }
