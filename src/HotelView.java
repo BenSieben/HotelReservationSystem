@@ -9,6 +9,8 @@ import java.util.Scanner;
  */
 public class HotelView extends JFrame {
 
+    private LoginPanel loginPanel;
+
     /**
      * Constructs a brand new HotelView
      */
@@ -23,8 +25,8 @@ public class HotelView extends JFrame {
         setLocationRelativeTo(null); // will center the frame when it initially opens
 
         // TODO Add the JPanels to the frame
-        LoginPanel lp = new LoginPanel();
-        add(lp);
+        this.loginPanel = new LoginPanel();
+        add(this.loginPanel);
 
         // Finalize some constants for the JFrame to make it visible
         pack();
@@ -102,5 +104,13 @@ public class HotelView extends JFrame {
 
     public void displaySuccess(String arg) {
         System.out.println("Success! " + arg);
+    }
+
+    /**
+     * Returns the login panel attached to the view
+     * @return the login panel attached to the view
+     */
+    public LoginPanel getLoginPanel() {
+        return this.loginPanel;
     }
 }
