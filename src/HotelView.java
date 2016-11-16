@@ -11,13 +11,13 @@ public class HotelView extends JFrame {
 
     // The different panels which can show up in the view
     private LoginPanel loginPanel;
-    private GuestPanel guestPanel;
+    private CustomerPanel customerPanel;
     private ManagerPanel managerPanel;
 
     // The CardLayout JPanel and constants to refer to each of the panels the CardLayout JPanel holds
     private JPanel cards; //  The CardLayout JPanel which holds all the panels for the frame
     public final static String LOGIN_PANEL = "Login Panel";
-    public final static String GUEST_PANEL = "Guest Panel";
+    public final static String CUSTOMER_PANEL = "Guest Panel";
     public final static String MANAGER_PANEL = "Manager Panel";
 
     /**
@@ -40,11 +40,11 @@ public class HotelView extends JFrame {
         this.cards.setLayout(new CardLayout());
 
         this.loginPanel = new LoginPanel();
-        this.guestPanel = new GuestPanel();
+        this.customerPanel = new CustomerPanel();
         this.managerPanel = new ManagerPanel();
 
         this.cards.add(this.loginPanel, HotelView.LOGIN_PANEL);
-        this.cards.add(this.guestPanel, HotelView.GUEST_PANEL);
+        this.cards.add(this.customerPanel, HotelView.CUSTOMER_PANEL);
         this.cards.add(this.managerPanel, HotelView.MANAGER_PANEL);
 
         add(this.cards);
@@ -64,7 +64,7 @@ public class HotelView extends JFrame {
     public void changeCard(String newCard) {
         CardLayout cl = (CardLayout)(this.cards.getLayout());
         if(LOGIN_PANEL.equals(newCard)
-                || GUEST_PANEL.equals(newCard)
+                || CUSTOMER_PANEL.equals(newCard)
                 || MANAGER_PANEL.equals(newCard)) {
             cl.show(this.cards, newCard);
         }
@@ -156,11 +156,11 @@ public class HotelView extends JFrame {
     }
 
     /**
-     * Returns the guest panel attached to the view
-     * @return the guest panel attached to the view
+     * Returns the customer panel attached to the view
+     * @return the customer panel attached to the view
      */
-    public GuestPanel getGuestPanel() {
-        return this.guestPanel;
+    public CustomerPanel getCustomerPanel() {
+        return this.customerPanel;
     }
 
     /**

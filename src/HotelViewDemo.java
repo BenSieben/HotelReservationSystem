@@ -15,12 +15,12 @@ public class HotelViewDemo {
             public void run() {
                 HotelView hv = new HotelView();
                 LoginPanel lp = hv.getLoginPanel();
-                GuestPanel gp = hv.getGuestPanel();
+                CustomerPanel gp = hv.getCustomerPanel();
                 ManagerPanel mp = hv.getManagerPanel();
                 lp.addSignInButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        hv.changeCard(HotelView.GUEST_PANEL);
+                        hv.changeCard(HotelView.CUSTOMER_PANEL);
                     }
                 });
                 lp.addCreateAccountButtonListener(new ActionListener() {
