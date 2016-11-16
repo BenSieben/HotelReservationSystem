@@ -4,27 +4,30 @@ import java.awt.event.ActionListener;
 
 /**
  * JPanel that specifically draws the
- * guest panels for guests
+ * customer panels for customers
  * to perform actions like making reservations
  */
-public class GuestPanel extends JPanel {
+public class CustomerPanel extends JPanel {
 
     private JButton logoutButton;
 
     /**
-     * Creates a new GuestPanel
+     * Creates a new CustomerPanel
      */
-    public GuestPanel() {
+    public CustomerPanel() {
         super();
 
-        // TODO implement real guest panel
+        // TODO implement real customer panel
+        setLayout(new BorderLayout());
 
-        JLabel header = new JLabel("Welcome, Guest!");
-
+        // Create top panel which lets guest log out
+        JPanel topPanel = new JPanel();
+        JLabel welcomeLabel = new JLabel("Welcome, Customer!");
         this.logoutButton = new JButton("Logout");
 
-        add(header);
-        add(this.logoutButton);
+        topPanel.add(this.logoutButton);
+        topPanel.add(welcomeLabel);
+        add(topPanel, BorderLayout.NORTH);
     }
 
     /**
