@@ -113,10 +113,10 @@ public class LoginPanel extends JPanel {
     }
 
     /**
-     * Clears all text fields in the panel to
-     * revert to empty strings and other defaults
+     * Resets all components in the panel
+     * to have default values
      */
-    public void clearAllFields() {
+    public void resetAllFields() {
         this.signInUsername.setText("");
         this.signInPassword.setText("");
         this.signUpFirstName.setText("");
@@ -185,14 +185,18 @@ public class LoginPanel extends JPanel {
 
     /**
      * Get the number currently in sign up age text field
-     * @return the sign up age number
+     * @return the sign up age number (-1 in reject cases)
      */
     public int getSignUpAge() {
         String ageText = this.signUpAge.getText();
         try {
-            return Integer.parseInt(ageText);
+            int age = Integer.parseInt(ageText);
+            if(age >= 18 && age <= 200) {
+                return age;
+            }
+            return -1;  // If 18 <= age <= 200 is not satisfied, return -1 (i.e., reject the age)
         }
-        catch (NumberFormatException ex) {  // If the current age is invalid, give back -1
+        catch (NumberFormatException ex) {  // If the current age is not a number, give back -1
             return -1;
         }
     }
