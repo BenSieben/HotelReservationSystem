@@ -71,6 +71,15 @@ public class ManagerPanel extends JPanel{
     }
 
     /**
+     * Resets all components in the panel
+     * to have default values
+     */
+    public void resetAllFields() {
+        changeManagerName(DEFAULT_MANAGER_NAME);
+        this.messageLabel.setText("Any important error messages will appear here");
+    }
+
+    /**
      * Changes welcome greeting in panel to match the given
      * manager name
      * @param newName the name of the manager
