@@ -15,13 +15,13 @@ public class LoginPanel extends JPanel {
     private JPasswordField signInPassword;
     private JButton signInButton;
 
-    // Fields for the create account half of the login panel
-    private JTextField createAccountFirstName;
-    private JTextField createAccountLastName;
-    private JTextField createAccountUsername;
-    private JPasswordField createAccountPassword;
-    private JTextField createAccountAge;
-    private JButton createAccountButton;
+    // Fields for the sign up half of the login panel
+    private JTextField signUpFirstName;
+    private JTextField signUpLastName;
+    private JTextField signUpUsername;
+    private JPasswordField signUpPassword;
+    private JTextField signUpAge;
+    private JButton signUpButton;
 
     // One last label for drawing messages directed to user
     private JLabel messageLabel;
@@ -58,51 +58,51 @@ public class LoginPanel extends JPanel {
         signInPanel.add(signInFieldsPanel, BorderLayout.CENTER);
         signInPanel.add(this.signInButton, BorderLayout.SOUTH);
 
-        // Create right half of panel (create account)
-        JPanel createAccountPanel = new JPanel();
-        createAccountPanel.setLayout(new BorderLayout());
-        JLabel createAccountLabel = new JLabel("Create account", SwingConstants.CENTER);
-        createAccountLabel.setFont(new Font(null, Font.BOLD, 20));
-        createAccountLabel.setBackground(new Color(102, 224, 255));
-        createAccountLabel.setOpaque(true);
+        // Create right half of panel (sign up)
+        JPanel signUpPanel = new JPanel();
+        signUpPanel.setLayout(new BorderLayout());
+        JLabel signUpLabel = new JLabel("Create account", SwingConstants.CENTER);
+        signUpLabel.setFont(new Font(null, Font.BOLD, 20));
+        signUpLabel.setBackground(new Color(102, 224, 255));
+        signUpLabel.setOpaque(true);
 
-        JPanel createAccountFieldsPanel = new JPanel();
-        createAccountFieldsPanel.setLayout(new GridLayout(0, 1));  // 1 component per line
-        createAccountFieldsPanel.setBackground(new Color(0, 204, 255));
-        JLabel createAccountFirstNameLabel = new JLabel("First name", SwingConstants.CENTER);
-        this.createAccountFirstName = new JTextField();
-        JLabel createAccountLastNameLabel = new JLabel("Last name", SwingConstants.CENTER);
-        this.createAccountLastName = new JTextField();
-        JLabel createAccountUsernameLabel = new JLabel("Username", SwingConstants.CENTER);
-        this.createAccountUsername = new JTextField();
-        JLabel createAccountPasswordLabel = new JLabel("Password", SwingConstants.CENTER);
-        this.createAccountPassword = new JPasswordField();
-        this.createAccountPassword.setEchoChar('*');  // use * instead of typed characters for the password
-        JLabel createAccountAgeLabel = new JLabel("Age", SwingConstants.CENTER);
-        this.createAccountAge = new JTextField();
+        JPanel signUpFieldsPanel = new JPanel();
+        signUpFieldsPanel.setLayout(new GridLayout(0, 1));  // 1 component per line
+        signUpFieldsPanel.setBackground(new Color(0, 204, 255));
+        JLabel signUpFirstNameLabel = new JLabel("First name", SwingConstants.CENTER);
+        this.signUpFirstName = new JTextField();
+        JLabel signUpLastNameLabel = new JLabel("Last name", SwingConstants.CENTER);
+        this.signUpLastName = new JTextField();
+        JLabel signUpUsernameLabel = new JLabel("Username", SwingConstants.CENTER);
+        this.signUpUsername = new JTextField();
+        JLabel signUpPasswordLabel = new JLabel("Password", SwingConstants.CENTER);
+        this.signUpPassword = new JPasswordField();
+        this.signUpPassword.setEchoChar('*');  // use * instead of typed characters for the password
+        JLabel signUpAgeLabel = new JLabel("Age", SwingConstants.CENTER);
+        this.signUpAge = new JTextField();
 
-        createAccountFieldsPanel.add(createAccountFirstNameLabel);
-        createAccountFieldsPanel.add(this.createAccountFirstName);
-        createAccountFieldsPanel.add(createAccountLastNameLabel);
-        createAccountFieldsPanel.add(this.createAccountLastName);
-        createAccountFieldsPanel.add(createAccountUsernameLabel);
-        createAccountFieldsPanel.add(this.createAccountUsername);
-        createAccountFieldsPanel.add(createAccountPasswordLabel);
-        createAccountFieldsPanel.add(this.createAccountPassword);
-        createAccountFieldsPanel.add(createAccountAgeLabel);
-        createAccountFieldsPanel.add(this.createAccountAge);
+        signUpFieldsPanel.add(signUpFirstNameLabel);
+        signUpFieldsPanel.add(this.signUpFirstName);
+        signUpFieldsPanel.add(signUpLastNameLabel);
+        signUpFieldsPanel.add(this.signUpLastName);
+        signUpFieldsPanel.add(signUpUsernameLabel);
+        signUpFieldsPanel.add(this.signUpUsername);
+        signUpFieldsPanel.add(signUpPasswordLabel);
+        signUpFieldsPanel.add(this.signUpPassword);
+        signUpFieldsPanel.add(signUpAgeLabel);
+        signUpFieldsPanel.add(this.signUpAge);
 
-        this.createAccountButton = new JButton("Create account");
+        this.signUpButton = new JButton("Create account");
 
-        createAccountPanel.add(createAccountLabel, BorderLayout.NORTH);
-        createAccountPanel.add(createAccountFieldsPanel, BorderLayout.CENTER);
-        createAccountPanel.add(this.createAccountButton, BorderLayout.SOUTH);
+        signUpPanel.add(signUpLabel, BorderLayout.NORTH);
+        signUpPanel.add(signUpFieldsPanel, BorderLayout.CENTER);
+        signUpPanel.add(this.signUpButton, BorderLayout.SOUTH);
 
         // Add the two panels to the Login panel as well as the message label
         JPanel middleLoginPanel = new JPanel();
         middleLoginPanel.setLayout(new GridLayout(0, 2));  // 2 components per line
         middleLoginPanel.add(signInPanel);
-        middleLoginPanel.add(createAccountPanel);
+        middleLoginPanel.add(signUpPanel);
         add(middleLoginPanel, BorderLayout.CENTER);
 
         this.messageLabel = new JLabel("Any important messages will appear here", SwingConstants.CENTER);
@@ -119,11 +119,11 @@ public class LoginPanel extends JPanel {
     public void clearAllFields() {
         this.signInUsername.setText("");
         this.signInPassword.setText("");
-        this.createAccountFirstName.setText("");
-        this.createAccountLastName.setText("");
-        this.createAccountUsername.setText("");
-        this.createAccountPassword.setText("");
-        this.createAccountAge.setText("");
+        this.signUpFirstName.setText("");
+        this.signUpLastName.setText("");
+        this.signUpUsername.setText("");
+        this.signUpPassword.setText("");
+        this.signUpAge.setText("");
         this.messageLabel.setText("Any important error messages will appear here");
     }
 
@@ -152,43 +152,43 @@ public class LoginPanel extends JPanel {
     }
 
     /**
-     * Get the text currently in create account first name text field
-     * @return the create account first name text
+     * Get the text currently in sign up first name text field
+     * @return the sign up first name text
      */
-    public String getCreateAccountFirstName() {
-        return this.createAccountFirstName.getText();
+    public String getSignUpFirstName() {
+        return this.signUpFirstName.getText();
     }
 
     /**
-     * Get the text currently in create account last name text field
-     * @return the create account last name text
+     * Get the text currently in sign up last name text field
+     * @return the sign up last name text
      */
-    public String getCreateAccountLastName() {
-        return this.createAccountLastName.getText();
+    public String getSignUpLastName() {
+        return this.signUpLastName.getText();
     }
 
     /**
-     * Get the text currently in create account username text field
-     * @return the create account username text
+     * Get the text currently in sign up username text field
+     * @return the sign up username text
      */
-    public String getCreateAccountUsername() {
-        return this.createAccountUsername.getText();
+    public String getSignUpUsername() {
+        return this.signUpUsername.getText();
     }
 
     /**
-     * Get the text currently in create account password text field
-     * @return the create account password text
+     * Get the text currently in sign up password text field
+     * @return the sign up password text
      */
-    public String getCreateAccountPassword() {
-        return String.valueOf(this.createAccountPassword.getPassword());
+    public String getSignUpPassword() {
+        return String.valueOf(this.signUpPassword.getPassword());
     }
 
     /**
-     * Get the number currently in create account age text field
-     * @return the create account age number
+     * Get the number currently in sign up age text field
+     * @return the sign up age number
      */
-    public int getCreateAccountAge() {
-        String ageText = this.createAccountAge.getText();
+    public int getSignUpAge() {
+        String ageText = this.signUpAge.getText();
         try {
             return Integer.parseInt(ageText);
         }
@@ -199,10 +199,10 @@ public class LoginPanel extends JPanel {
 
     /**
      * Add a new ActionListener to listen for action events
-     * on the create account button
+     * on the sign up button
      */
-    public void addCreateAccountButtonListener(ActionListener listener) {
-        this.createAccountButton.addActionListener(listener);
+    public void addSignUpButtonListener(ActionListener listener) {
+        this.signUpButton.addActionListener(listener);
     }
 
     /**

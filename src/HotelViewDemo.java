@@ -23,7 +23,7 @@ public class HotelViewDemo {
                         hv.changeCard(HotelView.CUSTOMER_PANEL);
                     }
                 });
-                lp.addCreateAccountButtonListener(new ActionListener() {
+                lp.addSignUpButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         hv.changeCard(HotelView.MANAGER_PANEL);
