@@ -36,7 +36,7 @@ public class HotelModel {
     public ResultSet signIn(HashMap<String, Object> data) {
         try {
             ResultSet result = null;
-            String sql = "SELECT first_name, last_name FROM Customer WHERE username = ? AND password = ?;";
+            String sql = "SELECT * FROM Customer WHERE username = ? AND password = ?;";
             this.preparedStatement = conn.prepareStatement(sql);
             this.preparedStatement.setObject(1, data.get("username"));
             this.preparedStatement.setObject(2, data.get("password"));
