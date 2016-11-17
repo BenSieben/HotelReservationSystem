@@ -74,6 +74,116 @@ public class HotelView extends JFrame {
         }
     }
 
+    /**
+     * Returns the login panel attached to the view
+     * @return the login panel attached to the view
+     */
+    public LoginPanel getLoginPanel() {
+        return this.loginPanel;
+    }
+
+    /**
+     * Returns the customer panel attached to the view
+     * @return the customer panel attached to the view
+     */
+    public CustomerPanel getCustomerPanel() {
+        return this.customerPanel;
+    }
+
+    /**
+     * Returns the manager panel attached to the view
+     * @return the manager panel attached to the view
+     */
+    public ManagerPanel getManagerPanel() {
+        return this.managerPanel;
+    }
+
+    /**
+     * Creates a map of user-entered values and keys to match
+     * each value for when user tries to sign in
+     * @return map of information mapped to their actual values
+     */
+    public HashMap<String, Object> getSignInValues() {
+        HashMap<String, Object> values = new HashMap<String, Object>();
+
+        values.put("username", loginPanel.getSignInUsernameText());
+        values.put("password", loginPanel.getSignInPasswordText());
+
+        return values;
+    }
+
+    /**
+     * Creates a map of user-entered values and keys to match
+     * each value for when user tries to create account
+     * @return map of information indicating values for each key
+     */
+    public HashMap<String, Object> getSignUpValues() {
+        HashMap<String, Object> values = new HashMap<String, Object>();
+
+        values.put("first_name", loginPanel.getSignUpFirstName());
+        values.put("last_name", loginPanel.getSignUpLastName());
+        values.put("username", loginPanel.getSignUpUsername());
+        values.put("password", loginPanel.getSignUpPassword());
+        values.put("age", loginPanel.getSignUpAge());
+
+        return values;
+    }
+
+    /**
+     * Displays the given string argument on the login panel
+     * in the message area
+     * @param arg the text to show to the user
+     */
+    public void displayLoginMessage(String arg) {
+        loginPanel.setMessageLabel(arg);
+    }
+
+    /**
+     * Displays the given string argument on the customer panel
+     * in the message area
+     * @param arg the text to show to the user
+     */
+    public void displayCustomerMessage(String arg) {
+        customerPanel.setMessageLabel(arg);
+    }
+
+    /**
+     * Displays the given string argument on the manager panel
+     * in the message area
+     * @param arg the text to show to the user
+     */
+    public void displayManagerMessage(String arg) {
+        managerPanel.setMessageLabel(arg);
+    }
+
+    /**
+     * Changes greeting in customer panel to greet
+     * the newName
+     * @param newName name of customer to greet
+     */
+    public void changeCustomerName(String newName) {
+        customerPanel.changeCustomerName(newName);
+    }
+
+    /**
+     * Changes greeting in manager panel to greet
+     * the newName
+     * @param newName name of manager to greet
+     */
+    public void changeManagerName(String newName) {
+        managerPanel.changeManagerName(newName);
+    }
+
+    /**
+     * Resets the fields in all the panels
+     * of this view
+     */
+    public void resetAllPanels() {
+        loginPanel.resetAllFields();
+        customerPanel.resetAllFields();
+        managerPanel.resetAllFields();
+    }
+
     public HashMap<String, Object> signUpView() {
         try {
             String first, last, username, password = null;
@@ -145,29 +255,5 @@ public class HotelView extends JFrame {
 
     public void displaySuccess(String arg) {
         System.out.println("Success! " + arg);
-    }
-
-    /**
-     * Returns the login panel attached to the view
-     * @return the login panel attached to the view
-     */
-    public LoginPanel getLoginPanel() {
-        return this.loginPanel;
-    }
-
-    /**
-     * Returns the customer panel attached to the view
-     * @return the customer panel attached to the view
-     */
-    public CustomerPanel getCustomerPanel() {
-        return this.customerPanel;
-    }
-
-    /**
-     * Returns the manager panel attached to the view
-     * @return the manager panel attached to the view
-     */
-    public ManagerPanel getManagerPanel() {
-        return this.managerPanel;
     }
 }
