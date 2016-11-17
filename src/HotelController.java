@@ -75,7 +75,8 @@ public class HotelController {
                         this.view.changeCard(HotelView.CUSTOMER_PANEL);
                     }
                 } else {
-                    this.view.displayLoginMessage("Error! Sign-in query unsuccessful.");
+                    this.view.displayLoginMessage("Error! Sign-in query unsuccessful. " +
+                            "Most likely case is that username / password combination is invalid.");
                 }
             }
         }
@@ -98,10 +99,12 @@ public class HotelController {
                             "However, your age was invalid, and thus was defaulted to 18.");
                 }
                 else {
-                    this.view.displayLoginMessage("Success! Sign-up complete. You can now sign in with your credentials.");
+                    this.view.displayLoginMessage("Success! Sign-up complete. " +
+                            "You can now sign in with your credentials.");
                 }
             } else {
-                this.view.displayLoginMessage("Error! Sign-up query unsuccessful.");
+                this.view.displayLoginMessage("Error! Sign-up query unsuccessful. " +
+                        "Most likely case is that the username already exists.");
             }
         }
         catch(Exception ex) {
