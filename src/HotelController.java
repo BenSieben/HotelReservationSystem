@@ -62,7 +62,6 @@ public class HotelController {
                 if (result.next() == true) { //check if result has any data, false means no
                     // Compute user's name
                     String usersName = result.getString("first_name") + " " + result.getString("last_name");
-                    System.out.println(result.getInt("customer_id"));
 
                     // Compute whether we should show customer view or manager view based on
                     //   the result of sign in query
