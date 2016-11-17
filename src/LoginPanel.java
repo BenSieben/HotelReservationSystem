@@ -61,7 +61,7 @@ public class LoginPanel extends JPanel {
         // Create right half of panel (sign up)
         JPanel signUpPanel = new JPanel();
         signUpPanel.setLayout(new BorderLayout());
-        JLabel signUpLabel = new JLabel("Create account", SwingConstants.CENTER);
+        JLabel signUpLabel = new JLabel("Sign up", SwingConstants.CENTER);
         signUpLabel.setFont(new Font(null, Font.BOLD, 20));
         signUpLabel.setBackground(new Color(102, 224, 255));
         signUpLabel.setOpaque(true);
