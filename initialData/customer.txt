@@ -1,4 +1,4 @@
-	admin	admin	admin	admin	42
+	Hotel	Manager	admin	admin	42
 	Luke	Skywalker	lskywalker	starwar	30
 	John	Smith	jsmith	js	23
 	Bruce	Almighty	balmighty	sovereign	19
