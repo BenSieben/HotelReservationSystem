@@ -15,11 +15,26 @@ CREATE TABLE Customer
     last_name VARCHAR(35), -- Customer's last name
     username VARCHAR(20) NOT NULL, -- Customer's username
     password VARCHAR(20) NOT NULL, -- Customer's password
-    age INT NOT NULL CHECK (age >= 18),  -- Customer's age
+    age INT NOT NULL,  -- Customer's age
     PRIMARY KEY (customer_id),
-    CONSTRAINT username_constraint UNIQUE (username)
+    CONSTRAINT username_constraint UNIQUE (username),
+    CHECK (age >= 18)  -- Note that this check is parsed, but never enforced. Trigger below enforces this (somewhat)
 );
 ALTER TABLE Customer AUTO_INCREMENT = 1;
+
+-- Customer trigger (check age) --
+DROP TRIGGER IF EXISTS CustomerInsertTrigger;
+delimiter //
+CREATE TRIGGER CustomerInsertTrigger
+BEFORE INSERT ON Customer
+FOR EACH ROW
+  BEGIN
+    IF NEW.age < 18 OR NEW.age > 200 THEN -- If customer is considered too young or too old, default their age to 18
+      SET NEW.age = 18;
+    END IF;
+  END;
+//
+delimiter ;
 
 -- Guest relation --
 DROP TABLE IF EXISTS Guest;
@@ -30,6 +45,20 @@ CREATE TABLE Guest
     PRIMARY KEY (guest_id)
 );
 ALTER TABLE Guest AUTO_INCREMENT = 11;
+
+-- Guest trigger (check age) --
+DROP TRIGGER IF EXISTS GuestInsertTrigger;
+delimiter //
+CREATE TRIGGER GuestInsertTrigger
+BEFORE INSERT ON Customer
+FOR EACH ROW
+  BEGIN
+    IF NEW.age < 0 OR NEW.age > 200 THEN  -- If user is considered too young or too old, default their age to 18
+      SET NEW.age = 0;
+    END IF;
+  END;
+//
+delimiter ;
 
 -- Customer_Guest relation --
 DROP TABLE IF EXISTS Customer_Guest;
