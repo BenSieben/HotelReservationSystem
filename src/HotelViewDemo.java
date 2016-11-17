@@ -33,14 +33,14 @@ public class HotelViewDemo {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         hv.changeCard(HotelView.LOGIN_PANEL);
-                        lp.clearAllFields();
+                        lp.resetAllFields();
                     }
                 });
                 mp.addLogoutButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         hv.changeCard(HotelView.LOGIN_PANEL);
-                        lp.clearAllFields();
+                        lp.resetAllFields();
                     }
                 });
             }
