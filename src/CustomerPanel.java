@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
@@ -20,6 +21,18 @@ public class CustomerPanel extends JPanel {
 
     // One last label for drawing messages directed to user
     private JLabel messageLabel;
+
+    // JPanel with card layout which holds all the different panels which can appear in the customer panel
+    private JPanel customerCards;
+
+    // All the card Panels
+    private PickReservationDateCustomerCard reservationDatePanel;
+
+    // Constants for identifying the different cards in customerCards
+    public static final String PICK_DATE_PANEL = "0";
+
+    private int cardIndex; // Keeps track of current card (for responding to directional button presses easily)
+    private static final int NUM_CARDS = 1;  // Number of cards that exist (currently) in the card panel of the customer panel
 
     /**
      * Creates a new CustomerPanel with default name
@@ -52,9 +65,21 @@ public class CustomerPanel extends JPanel {
         topPanel.add(this.logoutButton);
         topPanel.add(this.welcomeLabel);
 
-        // Create middle panel which lets customer perform actions
+        // Create center panel
         JPanel middlePanel = new JPanel();
-        middlePanel.setBackground(new Color(255, 204, 102));
+        middlePanel.setLayout(new BorderLayout());
+
+        // Create cards panel which lets customer perform actions in sequence
+        this.customerCards = new JPanel();
+        this.customerCards.setLayout(new CardLayout());
+
+        this.reservationDatePanel = new PickReservationDateCustomerCard();
+        this.customerCards.add(this.reservationDatePanel, CustomerPanel.PICK_DATE_PANEL);
+
+        // Add relevant panels to middle panel
+        middlePanel.add(customerCards, BorderLayout.CENTER);
+        JPanel cancelButtonPanel = createCancelButtonPanel();
+        middlePanel.add(cancelButtonPanel, BorderLayout.SOUTH);
 
         // Add all panels to the customer panel (and message label)
         add(topPanel, BorderLayout.NORTH);
@@ -65,6 +90,36 @@ public class CustomerPanel extends JPanel {
         this.messageLabel.setBackground(Color.LIGHT_GRAY);
         this.messageLabel.setOpaque(true);
         add(messageLabel, BorderLayout.SOUTH);
+
+        cardIndex = 0; // 0 is starting card index
+    }
+
+    /**
+     * Sends the customerCards panel back by one card
+     * (if already on the first panel, nothing happens)
+     */
+    public void goToPreviousCard() {
+        System.err.println("Previous");
+        // Go back to previous panel (but do not wrap from first panel to last panel)
+        CardLayout layout = (CardLayout)customerCards.getLayout();
+        // Decrement cardIndex, but do not go behind "0" card.
+        // This depends on precondition that all cards are named in numerical sequence
+        String nextCardID = Math.max(--cardIndex, 0) + "";
+        layout.show(customerCards, nextCardID);
+    }
+
+    /**
+     * Sends the customerCards panel forward by one
+     * card (will wrap around to front card if going to "next"
+     * card from the last card)
+     */
+    public void goToNextCard() {
+        System.err.println("next");
+        // On next button, go forward to next panel (but when going to next panel, if we are proceeding
+        //   from the final card to first card, we must also submit reservation data to database
+        CardLayout layout = (CardLayout)customerCards.getLayout();
+        cardIndex = (++cardIndex) % CustomerPanel.NUM_CARDS;  // Increment card index, looping to 0 if necessary
+        layout.next(customerCards);  // This moves to next card in sequence, wrapping to front if at last card
     }
 
     /**
@@ -111,4 +166,28 @@ public class CustomerPanel extends JPanel {
         }
     }
 
+    /**
+     * Creates a new JButton which has an action listener
+     * to totally reset the customerCards and send
+     * user back to first view and puts it in a
+     * FlowLayout JPanel
+     * @return JPanel containing a cancel button
+     */
+    private JPanel createCancelButtonPanel() {
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // On cancel button, jump back to first panel and reset all fields
+                System.err.println("cancel");
+                CardLayout layout = (CardLayout)customerCards.getLayout();
+                layout.show(customerCards, PICK_DATE_PANEL);
+                resetAllFields();
+            }
+        });
+        JPanel cancelButtonPanel = new JPanel();
+        cancelButtonPanel.add(cancelButton);
+        cancelButtonPanel.setBackground(new Color(255, 187, 51));
+        return cancelButtonPanel;
+    }
 }
