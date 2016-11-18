@@ -128,7 +128,7 @@ public class CustomerPanel extends JPanel {
      * to have default values
      */
     public void resetAllFields() {
-        changeCustomerName(DEFAULT_CUSTOMER_NAME);
+        reservationDatePanel.resetAllFields();
         this.messageLabel.setText("Any important error messages will appear here");
     }
 
