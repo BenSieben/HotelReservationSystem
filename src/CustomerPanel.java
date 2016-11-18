@@ -26,13 +26,21 @@ public class CustomerPanel extends JPanel {
     private JPanel customerCards;
 
     // All the customer reservation card panels that are in the customerCards panel
-    private PickReservationDateCustomerCard reservationDatePanel;
+    private PickReservationDateCustomerCard pickReservationDateCustomerCard;
+    private PickRoomCustomerCard pickRoomCustomerCard;
+    private SelectGuestsCustomerCard selectGuestsCustomerCard;
+    private PaymentCustomerCard paymentCustomerCard;
+    private ConfirmReservationCustomerCard confirmReservationCustomerCard;
 
     // Constants for identifying the different cards in customerCards
     public static final String PICK_DATE_PANEL = "0";
+    public static final String PICK_ROOM_PANEL = "1";
+    public static final String ADD_GUESTS_PANEL = "2";
+    public static final String PAYMENT_PANEL = "3";
+    public static final String RESERVATION_CONFIRM_PANEL = "4";
 
     private int cardIndex; // Keeps track of current card (for responding to directional button presses easily)
-    private static final int NUM_CARDS = 1;  // Number of cards that exist (currently) in the card panel of the customer panel
+    private static final int NUM_CARDS = 5;  // Number of cards that exist (currently) in the card panel of the customer panel
 
     /**
      * Creates a new CustomerPanel with default name
@@ -50,8 +58,6 @@ public class CustomerPanel extends JPanel {
      */
     public CustomerPanel(String customerName) {
         super();
-
-        // TODO implement real customer panel
         setLayout(new BorderLayout());
 
         // Create top panel which lets customer log out
@@ -74,8 +80,17 @@ public class CustomerPanel extends JPanel {
         this.customerCards = new JPanel();
         this.customerCards.setLayout(new CardLayout());
 
-        this.reservationDatePanel = new PickReservationDateCustomerCard();
-        this.customerCards.add(this.reservationDatePanel, CustomerPanel.PICK_DATE_PANEL);
+        this.pickReservationDateCustomerCard = new PickReservationDateCustomerCard();
+        this.pickRoomCustomerCard = new PickRoomCustomerCard();
+        this.selectGuestsCustomerCard = new SelectGuestsCustomerCard();
+        this.paymentCustomerCard = new PaymentCustomerCard();
+        this.confirmReservationCustomerCard = new ConfirmReservationCustomerCard();
+
+        this.customerCards.add(this.pickReservationDateCustomerCard, CustomerPanel.PICK_DATE_PANEL);
+        this.customerCards.add(this.pickRoomCustomerCard, CustomerPanel.PICK_ROOM_PANEL);
+        this.customerCards.add(this.selectGuestsCustomerCard, CustomerPanel.ADD_GUESTS_PANEL);
+        this.customerCards.add(this.paymentCustomerCard, CustomerPanel.PAYMENT_PANEL);
+        this.customerCards.add(this.confirmReservationCustomerCard, CustomerPanel.RESERVATION_CONFIRM_PANEL);
 
         // Add relevant panels to middle panel
         middlePanel.add(customerCards, BorderLayout.CENTER);
@@ -128,7 +143,11 @@ public class CustomerPanel extends JPanel {
      * to have default values
      */
     public void resetAllFields() {
-        reservationDatePanel.resetAllFields();
+        this.pickReservationDateCustomerCard.resetAllFields();
+        this.pickRoomCustomerCard.resetAllFields();
+        this.selectGuestsCustomerCard.resetAllFields();
+        this.paymentCustomerCard.resetAllFields();
+        this.confirmReservationCustomerCard.resetAllFields();
         this.messageLabel.setText("Any important error messages will appear here");
     }
 
