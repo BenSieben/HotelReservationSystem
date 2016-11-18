@@ -43,12 +43,12 @@ public class CustomerReservationCardPanel extends JPanel {
      * @param newMiddlePanel the panel to place in the middle of this CustomerReservationCardPanel
      */
     public void setMiddlePanel(JPanel newMiddlePanel) {
-        if(middlePanel != null) {
+        if(newMiddlePanel != null) {
             this.remove(this.middlePanel);
             this.middlePanel = newMiddlePanel;
             this.middlePanel.setOpaque(false);
             this.add(this.middlePanel);
-            validate();
+            revalidate();
             repaint();
         }
     }

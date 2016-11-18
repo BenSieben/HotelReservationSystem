@@ -24,7 +24,7 @@ public class HotelController {
         // Listeners on the customer panel (and sub-panels (the customer cards))
         initializeCustomerPanelListeners();
 
-        initializePickReservationCustomerCardListeners();
+        initializePickReservationDateCustomerCardListeners();
         initializePickRoomCustomerCardListeners();
         initializeSelectGuestsCustomerCardListeners();
         initializePaymentCustomerCardListeners();
@@ -79,30 +79,112 @@ public class HotelController {
     }
 
     /**
-     * Adds listeners to the pick reservation customer card in the customer panel
+     * Adds listeners to the pick reservation date customer card in the customer panel
      */
-    private void initializePickReservationCustomerCardListeners() {
-        CustomerPanel cp = this.view.getCustomerPanel();
+    private void initializePickReservationDateCustomerCardListeners() {
+        final CustomerPanel cp = this.view.getCustomerPanel();
         PickReservationDateCustomerCard cpDateCard = cp.getPickReservationDateCustomerCard();
-        cpDateCard.addPreviousButtonListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cp.goToPreviousCard();
-            }
-        });
+        // We do not do anything when previous button is pressed on date card (since it is the first card),
+        //   which is why there is no action listener for it
         cpDateCard.addNextButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cp.goToNextCard();
+                if(pickReservationDateCustomerCardFieldsAreValid()) {
+                    // TODO run query on database to find rooms that match the time frame specified by customer
+                    //   and place such rooms in the pick room customer card
+                    // (also remember to attach seconds / milliseconds to end of times before submitting to DB)
+                    cp.goToNextCard();
+                }
+                else {
+                    cp.setMessageLabel("Error: invalid date and / or time fields detected. " +
+                            "Make sure your dates and times are filled correctly (and are realistic times).");
+                }
             }
         });
+    }
+
+    /**
+     * Checks whether or not the fields in pickReservationDateCustomerCard are valid
+     * @return true if all fields are valid; false otherwise
+     */
+    private boolean pickReservationDateCustomerCardFieldsAreValid() {
+        // Pull all fields from the date card
+        PickReservationDateCustomerCard cpDate = this.view.getCustomerPanel().getPickReservationDateCustomerCard();
+        String startDate = cpDate.getStartDateText();
+        String startTime = cpDate.getStartTimeText();
+        String endDate = cpDate.getEndDateText();
+        String endTime = cpDate.getEndTimeText();
+
+        // Regular expressions to test fields against
+        String dateRegex = "\\d{4}-\\d{2}-\\d{2}";
+        String timeRegex = "\\d{2}:\\d{2}";
+
+        // Check one: all dates and times match their regex
+        if(startDate.matches(dateRegex) && startTime.matches(timeRegex)
+                && endDate.matches(dateRegex) && endTime.matches(timeRegex)) {
+            // Check two: the given dates and times are realistic values
+            if(dateIsRealistic(startDate) && timeIsRealistic(startTime)
+                    && dateIsRealistic(endDate) && timeIsRealistic(endTime)) {
+                // Check three: start date and time is less than end date and time
+                return (startDate + startTime).compareTo((endDate + endTime)) < 0;
+            }
+        }
+        return false;  // This return catches any case where some bad field is detected
+    }
+
+    /**
+     * Determines if given date is realistic or not
+     * @param date YYYY-MM-DD date string to check
+     * @return true if date is realistic, and false otherwise
+     */
+    private boolean dateIsRealistic(String date) {
+        int year = Integer.parseInt(date.substring(0, date.indexOf("-")));
+        int month = Integer.parseInt(date.substring(date.indexOf("-") + 1, date.lastIndexOf("-")));
+        int day = Integer.parseInt(date.substring(date.lastIndexOf("-") + 1));
+        if(year >= 2016 && year <= 3000) {  // Acceptable year starts at 2016 and ends at 3000 for reservation
+            if(month >= 1 && month <= 12) {
+                // Check that for the given month, the day is valid
+                switch(month) {
+                    case 1: return (day >= 1 && day <= 31);
+                    case 2: if(year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) { // Check for leap year
+                                return (day >= 1 && day <= 29);  // Is leap year
+                            }
+                            else {
+                                return (day >= 1 && day <= 28);  // Is not leap year
+                            }
+                    case 3: return (day >= 1 && day <= 31);
+                    case 4: return (day >= 1 && day <= 30);
+                    case 5: return (day >= 1 && day <= 31);
+                    case 6: return (day >= 1 && day <= 30);
+                    case 7: return (day >= 1 && day <= 31);
+                    case 8: return (day >= 1 && day <= 31);
+                    case 9: return (day >= 1 && day <= 30);
+                    case 10: return (day >= 1 && day <= 31);
+                    case 11: return (day >= 1 && day <= 30);
+                    case 12: return (day >= 1 && day <= 31);
+                }
+
+            }
+        }
+        return false; // This return catches any case where some bad date is detected
+    }
+
+    /**
+     * Determines if given time is realistic or not
+     * @param time HH:MM time string to check
+     * @return true if time is realistic, and false otherwise
+     */
+    private boolean timeIsRealistic(String time) {
+        int hour = Integer.parseInt(time.substring(0, time.indexOf(":")));
+        int minute = Integer.parseInt(time.substring(time.indexOf(":") + 1));
+        return (hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59);
     }
 
     /**
      * Adds listeners to the pick room customer card in the customer panel
      */
     private void initializePickRoomCustomerCardListeners() {
-        CustomerPanel cp = this.view.getCustomerPanel();
+        final CustomerPanel cp = this.view.getCustomerPanel();
         PickRoomCustomerCard cpRoomCard = cp.getPickRoomCustomerCard();
         cpRoomCard.addPreviousButtonListener(new ActionListener() {
             @Override
@@ -122,7 +204,7 @@ public class HotelController {
      * Adds listeners to the select guests customer card in the customer panel
      */
     private void initializeSelectGuestsCustomerCardListeners() {
-        CustomerPanel cp = this.view.getCustomerPanel();
+        final CustomerPanel cp = this.view.getCustomerPanel();
         SelectGuestsCustomerCard cpGuestCard = cp.getSelectGuestsCustomerCard();
         cpGuestCard.addPreviousButtonListener(new ActionListener() {
             @Override
@@ -142,7 +224,7 @@ public class HotelController {
      * Adds listeners to the payment customer card in the customer panel
      */
     private void initializePaymentCustomerCardListeners() {
-        CustomerPanel cp = this.view.getCustomerPanel();
+        final CustomerPanel cp = this.view.getCustomerPanel();
         PaymentCustomerCard cpPaymentCard = cp.getPaymentCustomerCard();
         cpPaymentCard.addPreviousButtonListener(new ActionListener() {
             @Override
@@ -162,7 +244,7 @@ public class HotelController {
      * Adds listeners to the confirm reservation customer card in the customer panel
      */
     private void initializeConfirmReservationCustomerCardListeners() {
-        CustomerPanel cp = this.view.getCustomerPanel();
+        final CustomerPanel cp = this.view.getCustomerPanel();
         ConfirmReservationCustomerCard cpReceiptCard = cp.getConfirmReservationCustomerCard();
         cpReceiptCard.addPreviousButtonListener(new ActionListener() {
             @Override
