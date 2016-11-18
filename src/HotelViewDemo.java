@@ -13,8 +13,8 @@ public class HotelViewDemo {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                HotelView hv = new HotelView();
-                LoginPanel lp = hv.getLoginPanel();
+                final HotelView hv = new HotelView();
+                final LoginPanel lp = hv.getLoginPanel();
                 CustomerPanel gp = hv.getCustomerPanel();
                 ManagerPanel mp = hv.getManagerPanel();
                 lp.addSignInButtonListener(new ActionListener() {
