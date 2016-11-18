@@ -64,6 +64,18 @@ public class HotelController {
                 handleLogout();
             }
         });
+        cp.addAddNewGuestButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.err.println("Add new guest!");
+            }
+        });
+        cp.addViewReservationsButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.err.println("View reservations (where you can also cancel reservations)!");
+            }
+        });
     }
 
     /**

@@ -16,8 +16,10 @@ public class CustomerPanel extends JPanel {
     //   in this welcomeLabel
     private JLabel welcomeLabel;
 
-    // Field for the top panel
+    // Fields for the top panel
     private JButton logoutButton;
+    private JButton addNewGuestButton;
+    private JButton viewReservationsButton;
 
     // One last label for drawing messages directed to user
     private JLabel messageLabel;
@@ -67,9 +69,14 @@ public class CustomerPanel extends JPanel {
         this.welcomeLabel = new JLabel();
         this.welcomeLabel.setFont(new Font(null, Font.BOLD, 20));
         changeCustomerName(customerName);  // Use helper method to set welcomeLabel text
+
         this.logoutButton = new JButton("Logout");
+        this.addNewGuestButton = new JButton("Add new guest");
+        this.viewReservationsButton = new JButton("View your reservations");
 
         topPanel.add(this.logoutButton);
+        topPanel.add(this.addNewGuestButton);
+        topPanel.add(this.viewReservationsButton);
         topPanel.add(this.welcomeLabel);
 
         // Create center panel
@@ -101,7 +108,7 @@ public class CustomerPanel extends JPanel {
         add(topPanel, BorderLayout.NORTH);
         add(middlePanel, BorderLayout.CENTER);
 
-        this.messageLabel = new JLabel("Any important error messages will appear here", SwingConstants.CENTER);
+        this.messageLabel = new JLabel("Any important messages will appear here", SwingConstants.CENTER);
         this.messageLabel.setForeground(Color.RED);
         this.messageLabel.setBackground(Color.LIGHT_GRAY);
         this.messageLabel.setOpaque(true);
@@ -149,7 +156,7 @@ public class CustomerPanel extends JPanel {
         this.confirmReservationCustomerCard.resetAllFields();
         CardLayout layout = (CardLayout)this.customerCards.getLayout();
         layout.show(this.customerCards, CustomerPanel.PICK_DATE_PANEL);
-        this.messageLabel.setText("Any important error messages will appear here");
+        this.messageLabel.setText("Any important messages will appear here");
     }
 
     /**
@@ -175,6 +182,24 @@ public class CustomerPanel extends JPanel {
      */
     public void addLogoutButtonListener(ActionListener listener) {
         this.logoutButton.addActionListener(listener);
+    }
+
+    /**
+     * Adds a new ActionListener to listen for the add new guest button
+     * being pressed
+     * @param listener the new ActionListener to associate with the add new guest button
+     */
+    public void addAddNewGuestButtonListener(ActionListener listener) {
+        this.addNewGuestButton.addActionListener(listener);
+    }
+
+    /**
+     * Adds a new ActionListener to listen for the view reservations button
+     * being pressed
+     * @param listener the new ActionListener to associate with the view reservations button
+     */
+    public void addViewReservationsButtonListener(ActionListener listener) {
+        this.viewReservationsButton.addActionListener(listener);
     }
 
     /**
