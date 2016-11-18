@@ -32,9 +32,7 @@ public class PickRoomCustomerCard extends CustomerReservationCardPanel {
      * Resets all fields in the panel to default values
      */
     public void resetAllFields() {
-        ArrayList<String> defaultRoomButton = new ArrayList<String>();
-        defaultRoomButton.add("Room reservations should load here");
-        setRoomListPane(defaultRoomButton);
+        setRoomListPane(new ArrayList<String>());  // Empty array list of rooms is default
 
         Object[][] sampleDetails = {{"Details go here", "after picking room"}};
         setRoomDetailsPane(sampleDetails);
@@ -56,6 +54,12 @@ public class PickRoomCustomerCard extends CustomerReservationCardPanel {
             JButton roomButton = new JButton(rooms.get(i));
             this.roomListButtons.add(roomButton);
             roomListPanel.add(roomButton);
+        }
+
+        if(rooms.size() == 0) { // Handle exceptional case when there are no available rooms
+            JLabel sorryLabel = new JLabel("It looks like no rooms are available in this time frame. Sorry!");
+            sorryLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            roomListPanel.add(sorryLabel);
         }
 
         this.roomListPane = new JScrollPane(roomListPanel);
