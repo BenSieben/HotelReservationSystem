@@ -11,9 +11,9 @@ public class ConfirmReservationCustomerCard extends CustomerReservationCardPanel
      * Creates a new ConfirmReservationCustomerCard
      */
     public ConfirmReservationCustomerCard() {
-        super("Previous", "Next");
+        super("Previous", "Finish");
 
-        addBorderForMiddlePanel("New reservation step 4: choose payment type");
+        addBorderForMiddlePanel("New reservation step 5: confirm reservation");
     }
 
     /**

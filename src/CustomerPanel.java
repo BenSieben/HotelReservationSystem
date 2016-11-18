@@ -115,7 +115,6 @@ public class CustomerPanel extends JPanel {
      * (if already on the first panel, nothing happens)
      */
     public void goToPreviousCard() {
-        System.err.println("Previous");
         // Go back to previous panel (but do not wrap from first panel to last panel)
         CardLayout layout = (CardLayout)customerCards.getLayout();
         // Decrement cardIndex, but do not go behind "0" card.
@@ -130,7 +129,6 @@ public class CustomerPanel extends JPanel {
      * card from the last card)
      */
     public void goToNextCard() {
-        System.err.println("next");
         // On next button, go forward to next panel (but when going to next panel, if we are proceeding
         //   from the final card to first card, we must also submit reservation data to database
         CardLayout layout = (CardLayout)customerCards.getLayout();
@@ -140,7 +138,8 @@ public class CustomerPanel extends JPanel {
 
     /**
      * Resets all components in the panel
-     * to have default values
+     * to have default values, and jumps back
+     * to first panel in the cards
      */
     public void resetAllFields() {
         this.pickReservationDateCustomerCard.resetAllFields();
@@ -148,6 +147,8 @@ public class CustomerPanel extends JPanel {
         this.selectGuestsCustomerCard.resetAllFields();
         this.paymentCustomerCard.resetAllFields();
         this.confirmReservationCustomerCard.resetAllFields();
+        CardLayout layout = (CardLayout)this.customerCards.getLayout();
+        layout.show(this.customerCards, CustomerPanel.PICK_DATE_PANEL);
         this.messageLabel.setText("Any important error messages will appear here");
     }
 
@@ -198,10 +199,8 @@ public class CustomerPanel extends JPanel {
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // On cancel button, jump back to first panel and reset all fields
+                // On cancel button, reset all fields
                 System.err.println("cancel");
-                CardLayout layout = (CardLayout)customerCards.getLayout();
-                layout.show(customerCards, PICK_DATE_PANEL);
                 resetAllFields();
             }
         });
@@ -209,5 +208,45 @@ public class CustomerPanel extends JPanel {
         cancelButtonPanel.add(cancelButton);
         cancelButtonPanel.setBackground(new Color(255, 187, 51));
         return cancelButtonPanel;
+    }
+
+    /**
+     * Returns the pick reservation date card in this customer panel
+     * @return the pick reservation date card in this customer panel
+     */
+    public PickReservationDateCustomerCard getPickReservationDateCustomerCard() {
+        return this.pickReservationDateCustomerCard;
+    }
+
+    /**
+     * Returns the pick room card in this customer panel
+     * @return the pick room card in this customer panel
+     */
+    public PickRoomCustomerCard getPickRoomCustomerCard() {
+        return this.pickRoomCustomerCard;
+    }
+
+    /**
+     * Returns the select guests card in this customer panel
+     * @return the select guests card in this customer panel
+     */
+    public SelectGuestsCustomerCard getSelectGuestsCustomerCard() {
+        return this.selectGuestsCustomerCard;
+    }
+
+    /**
+     * Returns the payment card in this customer panel
+     * @return the payment card in this customer panel
+     */
+    public PaymentCustomerCard getPaymentCustomerCard(){
+        return this.paymentCustomerCard;
+    }
+
+    /**
+     * Returns the confirm reservation card in this customer panel
+     * @return the confirm reservation card in this customer panel
+     */
+    public ConfirmReservationCustomerCard getConfirmReservationCustomerCard() {
+        return this.confirmReservationCustomerCard;
     }
 }
