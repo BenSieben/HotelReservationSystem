@@ -25,7 +25,7 @@ public class CustomerPanel extends JPanel {
     // JPanel with card layout which holds all the different panels which can appear in the customer panel
     private JPanel customerCards;
 
-    // All the card Panels
+    // All the customer reservation card panels that are in the customerCards panel
     private PickReservationDateCustomerCard reservationDatePanel;
 
     // Constants for identifying the different cards in customerCards
@@ -59,6 +59,7 @@ public class CustomerPanel extends JPanel {
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         topPanel.setBackground(new Color(255, 221, 153));
         this.welcomeLabel = new JLabel();
+        this.welcomeLabel.setFont(new Font(null, Font.BOLD, 20));
         changeCustomerName(customerName);  // Use helper method to set welcomeLabel text
         this.logoutButton = new JButton("Logout");
 

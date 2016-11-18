@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -15,9 +16,15 @@ public class CustomerReservationCardPanel extends JPanel {
     // DirectionalButtons are usually the same for any customer reservation card panel
     private DirectionalButtonCollection directionalButtons;
 
+    /**
+     * Creates a new CustomerReservationCardPanel
+     * @param previousButtonText text to put on previous button for this card
+     * @param nextButtonText text to put on next button for this card
+     */
     public CustomerReservationCardPanel(String previousButtonText, String nextButtonText) {
         super();
         setLayout(new BorderLayout());
+        setBackground(new Color(255, 204, 102));
 
         // Set up middle panel and directional buttons
         this.middlePanel = new JPanel();
@@ -37,7 +44,12 @@ public class CustomerReservationCardPanel extends JPanel {
      */
     public void setMiddlePanel(JPanel newMiddlePanel) {
         if(middlePanel != null) {
+            this.remove(this.middlePanel);
             this.middlePanel = newMiddlePanel;
+            this.middlePanel.setOpaque(false);
+            this.add(this.middlePanel);
+            validate();
+            repaint();
         }
     }
 
@@ -55,5 +67,15 @@ public class CustomerReservationCardPanel extends JPanel {
      */
     public void addNextButtonListener(ActionListener listener) {
         this.directionalButtons.addNextButtonListener(listener);
+    }
+
+    /**
+     * Adds a title border around the current middle panel
+     * @param middlePanelDescription text to put in title border
+     */
+    public void addBorderForMiddlePanel(String middlePanelDescription) {
+        TitledBorder newBorder = new TitledBorder(middlePanelDescription);
+        newBorder.setTitleFont(new Font(null, Font.BOLD, 16));
+        this.middlePanel.setBorder(newBorder);
     }
 }
