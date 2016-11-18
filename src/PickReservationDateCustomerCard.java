@@ -67,7 +67,9 @@ public class PickReservationDateCustomerCard extends CustomerReservationCardPane
      */
     public void resetAllFields() {
         this.startDay.setText("");
+        this.startTime.setText("");
         this.endDay.setText("");
+        this.endTime.setText("");
     }
 
     /**
