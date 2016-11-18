@@ -8,7 +8,7 @@ import java.awt.*;
 public class PickReservationDateCustomerCard extends CustomerReservationCardPanel {
 
     // Start date and end date are (currently) entered via text field
-    private JTextField startDate, endDate;
+    private JTextField startDay, startTime, endDay, endTime;
 
     /**
      * Creates a new PickReservationDateCustomerCard
@@ -20,43 +20,85 @@ public class PickReservationDateCustomerCard extends CustomerReservationCardPane
         JPanel middlePanel = new JPanel();
         middlePanel.setLayout(new GridLayout(0, 1));  // 1 component per row
 
-        JPanel startDatePanel = new JPanel();
-        JLabel startDateLabel = new JLabel("Start Date (YYYY-MM-DD)");
-        this.startDate = new JTextField(20);
-        startDatePanel.add(startDateLabel);
-        startDatePanel.add(this.startDate);
-        startDatePanel.setOpaque(false);
+        JPanel startDayPanel = new JPanel();
+        JLabel startDateLabel = new JLabel("Start date (YYYY-MM-DD)");
+        this.startDay = new JTextField(20);
+        startDayPanel.add(startDateLabel);
+        startDayPanel.add(this.startDay);
+        startDayPanel.setOpaque(false);
 
-        JPanel endDatePanel = new JPanel();
-        JLabel endDateLabel = new JLabel("End Date (YYYY-MM-DD)");
-        this.endDate = new JTextField(20);
-        endDatePanel.add(endDateLabel);
-        endDatePanel.add(this.endDate);
-        endDatePanel.setOpaque(false);
+        JPanel startTimePanel = new JPanel();
+        JLabel startTimeLabel = new JLabel("Check-in time (in 24-hour time format) (HH:MM)");
+        // The seconds / milliseconds can be defaulted to zero
+        this.startTime = new JTextField(20);
+        startTimePanel.add(startTimeLabel);
+        startTimePanel.add(this.startTime);
+        startTimePanel.setOpaque(false);
+
+        JPanel endDayPanel = new JPanel();
+        JLabel endDayLabel = new JLabel("End date (YYYY-MM-DD)");
+        this.endDay = new JTextField(20);
+        endDayPanel.add(endDayLabel);
+        endDayPanel.add(this.endDay);
+        endDayPanel.setOpaque(false);
+
+        JPanel endTimePanel = new JPanel();
+        JLabel endTimeLabel = new JLabel("Check-out time (in 24-hour time format) (HH:MM)");
+        // The seconds / milliseconds can be defaulted to zero
+        this.endTime = new JTextField(20);
+        endTimePanel.add(endTimeLabel);
+        endTimePanel.add(this.endTime);
+        endTimePanel.setOpaque(false);
 
         // Add all components to middle panel in right places
-        middlePanel.add(startDatePanel);
-        middlePanel.add(endDatePanel);
+        middlePanel.add(startDayPanel);
+        middlePanel.add(startTimePanel);
+        middlePanel.add(endDayPanel);
+        middlePanel.add(endTimePanel);
 
         // Use this middle panel as the new middle panel, and add a border describing it
         setMiddlePanel(middlePanel);
-        addBorderForMiddlePanel("Step 1: Pick Reservation Date");
-        repaint();
+        addBorderForMiddlePanel("New reservation step 1: pick reservation date");
     }
 
     /**
-     * Returns text currently in start date field
-     * @return text currently in start date field
+     * Resets all fields in the pick reservation date
+     * customer card
+     */
+    public void resetAllFields() {
+        this.startDay.setText("");
+        this.endDay.setText("");
+    }
+
+    /**
+     * Returns text currently in start day field
+     * @return text currently in start day field
      */
     public String getStartDateText() {
-        return this.startDate.getText();
+        return this.startDay.getText();
     }
 
     /**
-     * Returns text currently in end date field
-     * @return text currently in end date field
+     * Returns text currently in start time field
+     * @return text currently in start time field
+     */
+    public String getStartTimeText() {
+        return this.startTime.getText();
+    }
+
+    /**
+     * Returns text currently in end day field
+     * @return text currently in end day field
      */
     public String getEndDateText() {
-        return this.endDate.getText();
+        return this.endDay.getText();
+    }
+
+    /**
+     * Returns text currently in end time field
+     * @return text currently in end time field
+     */
+    public String getEndTimeText() {
+        return this.endTime.getText();
     }
 }
