@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
 
 /**
  * Fourth middle panel in the cards of the customer panel's CustomerReservationCardPanels,
@@ -87,7 +85,7 @@ public class PaymentCustomerCard extends CustomerReservationCardPanel {
     /**
      * Returns the currently selected payment type in the
      * payment type combo box
-     * @return
+     * @return currently selected payment type
      */
     public String getCurrentlySelectedPaymentType() {
         return (String)this.paymentTypes.getSelectedItem();
