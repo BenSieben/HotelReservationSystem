@@ -31,8 +31,11 @@ public class HotelController {
         initializeConfirmReservationCustomerCardListeners();
         initializeViewReservationsCustomerCardListeners();
 
-        // Listeners on manager panel
+        // Listeners on manager panel (and sub-panels (the manager cards))
         initializeManagerPanelListeners();
+
+        initializeViewCurrentReservationsManagerCardListeners();
+        initializeViewRevenueManagerCardListeners();
     }
 
     /**
@@ -309,7 +312,6 @@ public class HotelController {
             public void actionPerformed(ActionEvent e) {
                 // TODO set up and go to view current reservations view in manager panel
                 mp.changeCard(ManagerPanel.CURRENT_RESERVATIONS_PANEL);
-                System.err.println("View current reservations");
             }
         });
         mp.addViewArchivedReservationsPanelButtonListener(new ActionListener() {
@@ -317,7 +319,6 @@ public class HotelController {
             public void actionPerformed(ActionEvent e) {
                 // TODO set up and go to view archived reservations view in manager panel
                 mp.changeCard(ManagerPanel.ARCHIVED_RESERVATIONS_PANEL);
-                System.err.println("View archived reservations");
             }
         });
         mp.addViewRevenuePanelButtonListener(new ActionListener() {
@@ -325,7 +326,38 @@ public class HotelController {
             public void actionPerformed(ActionEvent e) {
                 // TODO set up and go to view revenue view in manager panel
                 mp.changeCard(ManagerPanel.REVENUE_PANEL);
-                System.err.println("View revenue");
+            }
+        });
+    }
+
+    /**
+     * Adds listeners to the view current reservations manager card
+     */
+    private void initializeViewCurrentReservationsManagerCardListeners() {
+        final ManagerPanel mp = this.view.getManagerPanel();
+        final ViewCurrentReservationsManagerCard mpViewCurrentReservationCard = mp.getViewCurrentReservationsManagerCard();
+        mpViewCurrentReservationCard.addCancelReservationButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO delete selected reservation, then reload new list of reservations back into the current reservation list panel
+                System.err.println("Deleting reservation " +
+                        mpViewCurrentReservationCard.getCurrentlySelectedReservationToCancel());
+            }
+        });
+    }
+
+    /**
+     * Adds listeners to the view revenue manager card
+     */
+    private void initializeViewRevenueManagerCardListeners() {
+        final ManagerPanel mp = this.view.getManagerPanel();
+        final ViewRevenueManagerCard mpViewRevenueManagerCard = mp.getViewRevenueManagerCard();
+        mpViewRevenueManagerCard.addYearMonthSubmitButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO check that manager entered valid year / month to get revenue for, then show
+                //   the revenues in the view if a valid value was entered
+                String yearMonth = mpViewRevenueManagerCard.getYearMonthText();
             }
         });
     }

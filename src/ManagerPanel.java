@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -34,7 +33,7 @@ public class ManagerPanel extends JPanel{
     // All the manager reservation card panels that are in the managerCards panel
     private ViewCurrentReservationsManagerCard viewCurrentReservationsManagerCard;
     private ViewArchivedReservationsManagerCard viewArchivedReservationsManagerCard;
-    private ViewRevenueReservationsManagerCard viewRevenueReservationsManagerCard;
+    private ViewRevenueManagerCard viewRevenueManagerCard;
 
     // Constants for identifying the different cards in managerCards
     public static final String CURRENT_RESERVATIONS_PANEL = "Reservations";
@@ -78,9 +77,9 @@ public class ManagerPanel extends JPanel{
         JPanel middleTopPanel = new JPanel();
         middleTopPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         middleTopPanel.setOpaque(false);
-        this.viewCurrentReservationsPanelButton = new JButton("View Current Reservations");
-        this.viewArchivedReservationsPanelButton = new JButton("View Archived Reservations");
-        this.viewRevenuePanelButton = new JButton("View Revenue");
+        this.viewCurrentReservationsPanelButton = new JButton("View current reservations");
+        this.viewArchivedReservationsPanelButton = new JButton("View archived reservations");
+        this.viewRevenuePanelButton = new JButton("View revenue");
         middleTopPanel.add(this.viewCurrentReservationsPanelButton);
         middleTopPanel.add(this.viewArchivedReservationsPanelButton);
         middleTopPanel.add(this.viewRevenuePanelButton);
@@ -91,11 +90,11 @@ public class ManagerPanel extends JPanel{
 
         this.viewCurrentReservationsManagerCard = new ViewCurrentReservationsManagerCard();
         this.viewArchivedReservationsManagerCard = new ViewArchivedReservationsManagerCard();
-        this.viewRevenueReservationsManagerCard = new ViewRevenueReservationsManagerCard();
+        this.viewRevenueManagerCard = new ViewRevenueManagerCard();
 
         this.managerCards.add(this.viewCurrentReservationsManagerCard, ManagerPanel.CURRENT_RESERVATIONS_PANEL);
         this.managerCards.add(this.viewArchivedReservationsManagerCard, ManagerPanel.ARCHIVED_RESERVATIONS_PANEL);
-        this.managerCards.add(this.viewRevenueReservationsManagerCard, ManagerPanel.REVENUE_PANEL);
+        this.managerCards.add(this.viewRevenueManagerCard, ManagerPanel.REVENUE_PANEL);
 
         middlePanel.add(middleTopPanel, BorderLayout.NORTH);
         middlePanel.add(this.managerCards, BorderLayout.CENTER);
@@ -117,7 +116,8 @@ public class ManagerPanel extends JPanel{
      */
     public void resetAllFields() {
         this.messageLabel.setText("Any important messages will appear here");
-        // TODO also reset the cards
+        this.viewRevenueManagerCard.resetAllFields();
+        this.changeCard(ManagerPanel.CURRENT_RESERVATIONS_PANEL);
     }
 
     /**
@@ -197,5 +197,29 @@ public class ManagerPanel extends JPanel{
             //  Tell user that their newCard is unrecognizable
             System.err.println("Error: newCard \"" + newCard + "\" is not recognized by ManagerPanel!");
         }
+    }
+
+    /**
+     * Returns the view current reservations card in this manager panel
+     * @return the view current reservations card in this manager panel
+     */
+    public ViewCurrentReservationsManagerCard getViewCurrentReservationsManagerCard() {
+        return this.viewCurrentReservationsManagerCard;
+    }
+
+    /**
+     * Returns the view archived reservations card in this manager panel
+     * @return the view archived reservations card in this manager panel
+     */
+    public ViewArchivedReservationsManagerCard getViewArchivedReservationsManagerCard() {
+        return this.viewArchivedReservationsManagerCard;
+    }
+
+    /**
+     * Returns the view revenue card in this manager panel
+     * @return the view revenue card in this manager panel
+     */
+    public ViewRevenueManagerCard getViewRevenueManagerCard() {
+        return this.viewRevenueManagerCard;
     }
 }
