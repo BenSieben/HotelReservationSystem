@@ -31,7 +31,6 @@ public class PickRoomCustomerCard extends CustomerReservationCardPanel {
      */
     public PickRoomCustomerCard() {
         super("Previous", "Next");
-
         resetAllFields();
     }
 
@@ -40,7 +39,6 @@ public class PickRoomCustomerCard extends CustomerReservationCardPanel {
      */
     public void resetAllFields() {
         setRoomListPane(new ArrayList<String>());  // Empty array list of rooms is default
-
         Object[][] sampleDetails = {{"Details go here", "after picking room"}};
         setRoomDetailsPane(sampleDetails);
     }
@@ -96,7 +94,6 @@ public class PickRoomCustomerCard extends CustomerReservationCardPanel {
             this.roomListButtons.get(i).addActionListener(listeners.get(i));
         }
     }
-
 
     /**
      * Creates new room details pane according to row data and

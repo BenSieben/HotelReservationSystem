@@ -245,6 +245,7 @@ public class HotelController {
             public void actionPerformed(ActionEvent e) {
                 // TODO prepare receipt card (if not already done in other listeners)
                 // From the payment card, once they hit next we can determine their chosen payment type
+                //   (make the 2D object array for ConfirmReservationCustomerCard's setReservationDetailsPane method)
                 String selectedPaymentType = cpPaymentCard.getCurrentlySelectedPaymentType();
                 cp.goToNextCard();
             }
