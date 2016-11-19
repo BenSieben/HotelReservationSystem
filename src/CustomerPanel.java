@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * JPanel that specifically draws the
@@ -33,6 +34,7 @@ public class CustomerPanel extends JPanel {
     private SelectGuestsCustomerCard selectGuestsCustomerCard;
     private PaymentCustomerCard paymentCustomerCard;
     private ConfirmReservationCustomerCard confirmReservationCustomerCard;
+    private ViewReservationsCustomerCard viewReservationsCustomerCard;
 
     // Constants for identifying the different cards in customerCards
     public static final String PICK_DATE_PANEL = "0";
@@ -40,9 +42,10 @@ public class CustomerPanel extends JPanel {
     public static final String ADD_GUESTS_PANEL = "2";
     public static final String PAYMENT_PANEL = "3";
     public static final String RESERVATION_CONFIRM_PANEL = "4";
+    public final static String VIEW_RESERVATIONS_PANEL = "5";
 
     private int cardIndex; // Keeps track of current card (for responding to directional button presses easily)
-    private static final int NUM_CARDS = 5;  // Number of cards that exist (currently) in the card panel of the customer panel
+    private static final int NUM_MAKE_RESERVATION_CARDS = 5;  // Number of cards that exist (currently) in the card panel of the customer panel
 
     /**
      * Creates a new CustomerPanel with default name
@@ -92,12 +95,14 @@ public class CustomerPanel extends JPanel {
         this.selectGuestsCustomerCard = new SelectGuestsCustomerCard();
         this.paymentCustomerCard = new PaymentCustomerCard();
         this.confirmReservationCustomerCard = new ConfirmReservationCustomerCard();
+        this.viewReservationsCustomerCard = new ViewReservationsCustomerCard(new ReservationListPanel());
 
         this.customerCards.add(this.pickReservationDateCustomerCard, CustomerPanel.PICK_DATE_PANEL);
         this.customerCards.add(this.pickRoomCustomerCard, CustomerPanel.PICK_ROOM_PANEL);
         this.customerCards.add(this.selectGuestsCustomerCard, CustomerPanel.ADD_GUESTS_PANEL);
         this.customerCards.add(this.paymentCustomerCard, CustomerPanel.PAYMENT_PANEL);
         this.customerCards.add(this.confirmReservationCustomerCard, CustomerPanel.RESERVATION_CONFIRM_PANEL);
+        this.customerCards.add(this.viewReservationsCustomerCard, CustomerPanel.VIEW_RESERVATIONS_PANEL);
 
         // Add relevant panels to middle panel
         middlePanel.add(customerCards, BorderLayout.CENTER);
@@ -139,8 +144,30 @@ public class CustomerPanel extends JPanel {
         // On next button, go forward to next panel (but when going to next panel, if we are proceeding
         //   from the final card to first card, we must also submit reservation data to database
         CardLayout layout = (CardLayout)customerCards.getLayout();
-        cardIndex = (++cardIndex) % CustomerPanel.NUM_CARDS;  // Increment card index, looping to 0 if necessary
+        cardIndex = (++cardIndex) % CustomerPanel.NUM_MAKE_RESERVATION_CARDS;  // Increment card index, looping to 0 if necessary
         layout.next(customerCards);  // This moves to next card in sequence, wrapping to front if at last card
+    }
+
+    /**
+     * Switches main panel on screen to the
+     * make new reservation view, where customers
+     * can go through a number of panels to
+     * make a new reservation
+     */
+    public void goToMakeNewReservationView() {
+        CardLayout layout = (CardLayout)this.customerCards.getLayout();
+        layout.show(this.customerCards, CustomerPanel.PICK_DATE_PANEL);
+        cardIndex = 0;  // Reset card index back to 0
+    }
+
+    /**
+     * Switches main panel on screen to switch to the
+     * view reservation view, where customers can see
+     * previous reservations they have made
+     */
+    public void goToViewReservationView() {
+        CardLayout layout = (CardLayout)this.customerCards.getLayout();
+        layout.show(this.customerCards, CustomerPanel.VIEW_RESERVATIONS_PANEL);
     }
 
     /**
@@ -154,8 +181,6 @@ public class CustomerPanel extends JPanel {
         this.selectGuestsCustomerCard.resetAllFields();
         this.paymentCustomerCard.resetAllFields();
         this.confirmReservationCustomerCard.resetAllFields();
-        CardLayout layout = (CardLayout)this.customerCards.getLayout();
-        layout.show(this.customerCards, CustomerPanel.PICK_DATE_PANEL);
         this.messageLabel.setText("Any important messages will appear here");
     }
 

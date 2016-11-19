@@ -57,23 +57,23 @@ public class HotelController {
      * Adds listeners to the customer panel
      */
     private void initializeCustomerPanelListeners() {
-        CustomerPanel cp = this.view.getCustomerPanel();
+        final CustomerPanel cp = this.view.getCustomerPanel();
         cp.addLogoutButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 handleLogout();
             }
         });
-        cp.addAddNewGuestButtonListener(new ActionListener() {
+        cp.addMakeNewReservationButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.err.println("Add new guest!");
+                cp.goToMakeNewReservationView();
             }
         });
         cp.addViewReservationsButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.err.println("View reservations (where you can also cancel reservations)!");
+                cp.goToViewReservationView();
             }
         });
     }
@@ -89,10 +89,12 @@ public class HotelController {
         cpDateCard.addNextButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(pickReservationDateCustomerCardFieldsAreValid()) {
+                if(true) { // TODO use pickReservationDateCustomerCardFieldsAreValid() when testing full program
                     // TODO run query on database to find rooms that match the time frame specified by customer
                     //   and place such rooms in the pick room customer card
                     // (also remember to attach seconds / milliseconds to end of times before submitting to DB)
+                    // After that, the room buttons must be added to the pick room customer card and all the
+                    //   action listeners must be wired to these buttons to show the room details
                     cp.goToNextCard();
                 }
                 else {
@@ -185,7 +187,7 @@ public class HotelController {
      */
     private void initializePickRoomCustomerCardListeners() {
         final CustomerPanel cp = this.view.getCustomerPanel();
-        PickRoomCustomerCard cpRoomCard = cp.getPickRoomCustomerCard();
+        final PickRoomCustomerCard cpRoomCard = cp.getPickRoomCustomerCard();
         cpRoomCard.addPreviousButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -195,6 +197,8 @@ public class HotelController {
         cpRoomCard.addNextButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // TODO make sure customer actually selected a room before going to next card
+                HashMap<String, Object> roomDetails = cpRoomCard.getLastSelectedRoomDetails();
                 cp.goToNextCard();
             }
         });
@@ -205,7 +209,7 @@ public class HotelController {
      */
     private void initializeSelectGuestsCustomerCardListeners() {
         final CustomerPanel cp = this.view.getCustomerPanel();
-        SelectGuestsCustomerCard cpGuestCard = cp.getSelectGuestsCustomerCard();
+        final SelectGuestsCustomerCard cpGuestCard = cp.getSelectGuestsCustomerCard();
         cpGuestCard.addPreviousButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -215,6 +219,9 @@ public class HotelController {
         cpGuestCard.addNextButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // TODO prepare payment card with total cost (and payment options)
+                // TODO check that the number of guests selected by the user is within recommended range
+                String numGuestsText = cpGuestCard.getNumGuestsText();
                 cp.goToNextCard();
             }
         });
@@ -225,7 +232,7 @@ public class HotelController {
      */
     private void initializePaymentCustomerCardListeners() {
         final CustomerPanel cp = this.view.getCustomerPanel();
-        PaymentCustomerCard cpPaymentCard = cp.getPaymentCustomerCard();
+        final PaymentCustomerCard cpPaymentCard = cp.getPaymentCustomerCard();
         cpPaymentCard.addPreviousButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -235,6 +242,9 @@ public class HotelController {
         cpPaymentCard.addNextButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // TODO prepare receipt card (if not already done in other listeners)
+                // From the payment card, once they hit next we can determine their chosen payment type
+                String selectedPaymentType = cpPaymentCard.getCurrentlySelectedPaymentType();
                 cp.goToNextCard();
             }
         });
@@ -255,7 +265,13 @@ public class HotelController {
         cpReceiptCard.addNextButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cp.goToNextCard();
+                // TODO submit the customer's reservation to the database
+                //   all entered reservation data to be reset to defaults
+
+                // TODO uncomment these two lines when ready to use actual program behavior
+                //   by clearing all make new reservation panels and going back to first make new reservation panel
+                //cp.resetAllFields();
+                //cp.goToMakeNewReservationView();
             }
         });
     }
