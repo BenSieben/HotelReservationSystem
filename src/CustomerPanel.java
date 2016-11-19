@@ -18,7 +18,7 @@ public class CustomerPanel extends JPanel {
 
     // Fields for the top panel
     private JButton logoutButton;
-    private JButton addNewGuestButton;
+    private JButton makeNewReservationButton;
     private JButton viewReservationsButton;
 
     // One last label for drawing messages directed to user
@@ -62,7 +62,7 @@ public class CustomerPanel extends JPanel {
         super();
         setLayout(new BorderLayout());
 
-        // Create top panel which lets customer log out
+        // Create top panel
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         topPanel.setBackground(new Color(255, 221, 153));
@@ -71,11 +71,11 @@ public class CustomerPanel extends JPanel {
         changeCustomerName(customerName);  // Use helper method to set welcomeLabel text
 
         this.logoutButton = new JButton("Logout");
-        this.addNewGuestButton = new JButton("Add new guest");
+        this.makeNewReservationButton = new JButton("Make new reservation");
         this.viewReservationsButton = new JButton("View your reservations");
 
         topPanel.add(this.logoutButton);
-        topPanel.add(this.addNewGuestButton);
+        topPanel.add(this.makeNewReservationButton);
         topPanel.add(this.viewReservationsButton);
         topPanel.add(this.welcomeLabel);
 
@@ -185,12 +185,12 @@ public class CustomerPanel extends JPanel {
     }
 
     /**
-     * Adds a new ActionListener to listen for the add new guest button
+     * Adds a new ActionListener to listen for the make new reservation button
      * being pressed
-     * @param listener the new ActionListener to associate with the add new guest button
+     * @param listener the new ActionListener to associate with the make new reservation button
      */
-    public void addAddNewGuestButtonListener(ActionListener listener) {
-        this.addNewGuestButton.addActionListener(listener);
+    public void addMakeNewReservationButtonListener(ActionListener listener) {
+        this.makeNewReservationButton.addActionListener(listener);
     }
 
     /**
