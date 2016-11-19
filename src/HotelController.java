@@ -350,6 +350,7 @@ public class HotelController {
                     if(result.getInt("customer_id") == 1) {  // Manager has customer id 1, so greet the manager
                         this.view.changeManagerName(usersName);
                         this.view.changeCard(HotelView.MANAGER_PANEL);
+                        // TODO also update the view current reservations / archived reservations in the manager panel
                     }
                     else { // Regular customers will have any other id
                         this.view.changeCustomerName(usersName);

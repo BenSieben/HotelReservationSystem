@@ -31,18 +31,10 @@ public class ManagerPanel extends JPanel{
     // The middle panel itself
     private JPanel managerCards;
 
-    // The components of the three main panels in the manager panel
-    private JPanel currentReservationsPanel;
-    private ReservationListPanel currentReservationsList;
-
-    private JPanel archivedReservationsPanel;
-    private ReservationListPanel archivedReservationsList;
-
-    private JPanel viewRevenuePanel;
-    private JTextField yearMonthTextField;
-    private JButton yearMonthSubmitButton;
-    private JScrollPane revenuePane;
-    private JTable revenueTable;
+    // All the manager reservation card panels that are in the managerCards panel
+    private ViewCurrentReservationsManagerCard viewCurrentReservationsManagerCard;
+    private ViewArchivedReservationsManagerCard viewArchivedReservationsManagerCard;
+    private ViewRevenueReservationsManagerCard viewRevenueReservationsManagerCard;
 
     // Constants for identifying the different cards in managerCards
     public static final String CURRENT_RESERVATIONS_PANEL = "Reservations";
@@ -97,35 +89,13 @@ public class ManagerPanel extends JPanel{
         this.managerCards.setLayout(new CardLayout());  // Flip through various actions hotel manager can perform
         this.managerCards.setOpaque(false);
 
-        this.currentReservationsPanel = new JPanel();
-        this.currentReservationsPanel.setLayout(new GridLayout(0, 1));  // 1 component per row
-        this.currentReservationsPanel.setOpaque(false);
-        this.currentReservationsList = new ReservationListPanel(true);
-        this.currentReservationsPanel.add(this.currentReservationsList);
-        TitledBorder newBorder = new TitledBorder("View / Cancel Reservations");
-        newBorder.setTitleFont(new Font(null, Font.BOLD, 16));
-        this.currentReservationsPanel.setBorder(newBorder);
+        this.viewCurrentReservationsManagerCard = new ViewCurrentReservationsManagerCard();
+        this.viewArchivedReservationsManagerCard = new ViewArchivedReservationsManagerCard();
+        this.viewRevenueReservationsManagerCard = new ViewRevenueReservationsManagerCard();
 
-        this.archivedReservationsPanel = new JPanel();
-        this.archivedReservationsPanel.setLayout(new GridLayout(0, 1));  // 1 component per row
-        this.archivedReservationsPanel.setOpaque(false);
-        this.archivedReservationsList = new ReservationListPanel(false);
-        this.archivedReservationsPanel.add(this.archivedReservationsList);
-        newBorder = new TitledBorder("View Reservation Archive");
-        newBorder.setTitleFont(new Font(null, Font.BOLD, 16));
-        this.archivedReservationsPanel.setBorder(newBorder);
-
-        this.viewRevenuePanel = new JPanel();
-        this.viewRevenuePanel.setLayout(new GridLayout(0, 1));  // 1 component per row
-        this.viewRevenuePanel.setOpaque(false);
-        // TODO add components to view revenue panel
-        newBorder = new TitledBorder("View Monthly / Weekly Revenue");
-        newBorder.setTitleFont(new Font(null, Font.BOLD, 16));
-        this.archivedReservationsPanel.setBorder(newBorder);
-
-        this.managerCards.add(this.currentReservationsPanel, ManagerPanel.CURRENT_RESERVATIONS_PANEL);
-        this.managerCards.add(this.archivedReservationsPanel, ManagerPanel.ARCHIVED_RESERVATIONS_PANEL);
-        this.managerCards.add(this.viewRevenuePanel, ManagerPanel.REVENUE_PANEL);
+        this.managerCards.add(this.viewCurrentReservationsManagerCard, ManagerPanel.CURRENT_RESERVATIONS_PANEL);
+        this.managerCards.add(this.viewArchivedReservationsManagerCard, ManagerPanel.ARCHIVED_RESERVATIONS_PANEL);
+        this.managerCards.add(this.viewRevenueReservationsManagerCard, ManagerPanel.REVENUE_PANEL);
 
         middlePanel.add(middleTopPanel, BorderLayout.NORTH);
         middlePanel.add(this.managerCards, BorderLayout.CENTER);
@@ -146,8 +116,8 @@ public class ManagerPanel extends JPanel{
      * to have default values
      */
     public void resetAllFields() {
-        changeManagerName(DEFAULT_MANAGER_NAME);
         this.messageLabel.setText("Any important messages will appear here");
+        // TODO also reset the cards
     }
 
     /**
