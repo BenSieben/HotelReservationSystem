@@ -79,7 +79,10 @@ public class PaymentCustomerCard extends CustomerReservationCardPanel {
      * @param paymentTypes
      */
     public void setPaymentTypes(String[] paymentTypes) {
-        resetAllFields(paymentTypes);
+        this.paymentTypes.removeAllItems();
+        for (int i = 0; i < paymentTypes.length; i++) {
+            this.paymentTypes.addItem(paymentTypes[i]);
+        }
     }
 
     /**

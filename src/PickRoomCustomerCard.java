@@ -11,6 +11,9 @@ import java.util.HashMap;
  */
 public class PickRoomCustomerCard extends CustomerReservationCardPanel {
 
+    // The column names used in the JTable on this card
+    public static final String[] COLUMN_NAMES = {"Detail", "Value"};
+
     // The middle JPanel
     private JPanel middlePanel;
 
@@ -102,8 +105,7 @@ public class PickRoomCustomerCard extends CustomerReservationCardPanel {
      */
     public void setRoomDetailsPane(Object[][] rowData) {
         // Set up room details pane to hold new details
-        String[] columnNames = {"Detail", "Value"};
-        this.roomDetailsTable = new JTable(rowData, columnNames);
+        this.roomDetailsTable = new JTable(rowData, PickRoomCustomerCard.COLUMN_NAMES);
         this.roomDetailsPane = new JScrollPane(this.roomDetailsTable);
         this.roomDetailsTable.setFillsViewportHeight(true);
 

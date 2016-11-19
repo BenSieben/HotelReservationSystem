@@ -47,6 +47,9 @@ public class CustomerPanel extends JPanel {
     private int cardIndex; // Keeps track of current card (for responding to directional button presses easily)
     private static final int NUM_MAKE_RESERVATION_CARDS = 5;  // Number of cards that exist (currently) in the card panel of the customer panel
 
+    // JPanel which holds cancel button
+    private JPanel cancelButtonPanel;
+
     /**
      * Creates a new CustomerPanel with default name
      * for Customer
@@ -95,7 +98,7 @@ public class CustomerPanel extends JPanel {
         this.selectGuestsCustomerCard = new SelectGuestsCustomerCard();
         this.paymentCustomerCard = new PaymentCustomerCard();
         this.confirmReservationCustomerCard = new ConfirmReservationCustomerCard();
-        this.viewReservationsCustomerCard = new ViewReservationsCustomerCard(new ReservationListPanel());
+        this.viewReservationsCustomerCard = new ViewReservationsCustomerCard(new ReservationListPanel(true));
 
         this.customerCards.add(this.pickReservationDateCustomerCard, CustomerPanel.PICK_DATE_PANEL);
         this.customerCards.add(this.pickRoomCustomerCard, CustomerPanel.PICK_ROOM_PANEL);
@@ -106,8 +109,8 @@ public class CustomerPanel extends JPanel {
 
         // Add relevant panels to middle panel
         middlePanel.add(customerCards, BorderLayout.CENTER);
-        JPanel cancelButtonPanel = createCancelButtonPanel();
-        middlePanel.add(cancelButtonPanel, BorderLayout.SOUTH);
+        this.cancelButtonPanel = createCancelButtonPanel();
+        middlePanel.add(this.cancelButtonPanel, BorderLayout.SOUTH);
 
         // Add all panels to the customer panel (and message label)
         add(topPanel, BorderLayout.NORTH);
@@ -157,6 +160,7 @@ public class CustomerPanel extends JPanel {
     public void goToMakeNewReservationView() {
         CardLayout layout = (CardLayout)this.customerCards.getLayout();
         layout.show(this.customerCards, CustomerPanel.PICK_DATE_PANEL);
+        this.cancelButtonPanel.setVisible(true);
         cardIndex = 0;  // Reset card index back to 0
     }
 
@@ -168,6 +172,7 @@ public class CustomerPanel extends JPanel {
     public void goToViewReservationView() {
         CardLayout layout = (CardLayout)this.customerCards.getLayout();
         layout.show(this.customerCards, CustomerPanel.VIEW_RESERVATIONS_PANEL);
+        this.cancelButtonPanel.setVisible(false);
     }
 
     /**
@@ -298,5 +303,13 @@ public class CustomerPanel extends JPanel {
      */
     public ConfirmReservationCustomerCard getConfirmReservationCustomerCard() {
         return this.confirmReservationCustomerCard;
+    }
+
+    /**
+     * Returns the view reservation card in this customer panel
+     * @return the view reservation card in this customer panel
+     */
+    public ViewReservationsCustomerCard getViewReservationsCustomerCard() {
+        return this.viewReservationsCustomerCard;
     }
 }

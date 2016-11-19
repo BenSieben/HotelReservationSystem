@@ -29,6 +29,7 @@ public class HotelController {
         initializeSelectGuestsCustomerCardListeners();
         initializePaymentCustomerCardListeners();
         initializeConfirmReservationCustomerCardListeners();
+        initializeViewReservationsCustomerCardListeners();
 
         // Listeners on manager panel
         initializeManagerPanelListeners();
@@ -277,6 +278,21 @@ public class HotelController {
     }
 
     /**
+     * Adds listeners to the view reservations customer card in the customer panel
+     */
+    private void initializeViewReservationsCustomerCardListeners() {
+        final CustomerPanel cp = this.view.getCustomerPanel();
+        final ViewReservationsCustomerCard cpViewReservationCard = cp.getViewReservationsCustomerCard();
+        cpViewReservationCard.addCancelReservationButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO delete selected reservation, then reload new list of reservations back into the reservation list panel
+                System.err.println("Deleting reservation " + cpViewReservationCard.getCurrentlySelectedReservationToCancel());
+            }
+        });
+    }
+
+    /**
      * Adds listeners to the manager panel
      */
     private void initializeManagerPanelListeners() {
@@ -313,6 +329,7 @@ public class HotelController {
                     else { // Regular customers will have any other id
                         this.view.changeCustomerName(usersName);
                         this.view.changeCard(HotelView.CUSTOMER_PANEL);
+                        // TODO also update the view reservations customer card based on the signed in customer's id
                     }
                 } else {
                     this.view.displayLoginMessage("Error! Sign-in query unsuccessful. " +
