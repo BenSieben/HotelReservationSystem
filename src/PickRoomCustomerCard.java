@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Second middle panel in the cards of the customer panel's CustomerReservationCardPanels,
@@ -18,6 +19,9 @@ public class PickRoomCustomerCard extends CustomerReservationCardPanel {
 
     // The array list of room list buttons that are currently in the room list pane
     private ArrayList<JButton> roomListButtons;
+
+    // The JTable which holds last selected room's details
+    private JTable roomDetailsTable;
 
     /**
      * Creates a new PickRoomCustomerCard
@@ -99,9 +103,9 @@ public class PickRoomCustomerCard extends CustomerReservationCardPanel {
     public void setRoomDetailsPane(Object[][] rowData) {
         // Set up room details pane to hold new details
         String[] columnNames = {"Detail", "Value"};
-        JTable roomDetailsTable = new JTable(rowData, columnNames);
-        this.roomDetailsPane = new JScrollPane(roomDetailsTable);
-        roomDetailsTable.setFillsViewportHeight(true);
+        this.roomDetailsTable = new JTable(rowData, columnNames);
+        this.roomDetailsPane = new JScrollPane(this.roomDetailsTable);
+        this.roomDetailsTable.setFillsViewportHeight(true);
 
         // Change middle panel to use this new room details
         this.middlePanel = new JPanel();
@@ -124,5 +128,20 @@ public class PickRoomCustomerCard extends CustomerReservationCardPanel {
      */
     public int getNumberOfRooms() {
         return roomListButtons.size();
+    }
+
+
+    /**
+     * Returns a map of all details of the last selected room pointing
+     * to their actual values
+     * @return a map of details pointing to their values for the last selected room
+     */
+    public HashMap<String, Object> getLastSelectedRoomDetails() {
+        HashMap<String, Object> details = new HashMap<String, Object>();
+        for (int i = 0; i < this.roomDetailsTable.getRowCount(); i++) {
+            details.put((String)this.roomDetailsTable.getValueAt(i, 0), this.roomDetailsTable.getValueAt(i, 1));
+        }
+        System.out.println(details);
+        return details;
     }
 }
