@@ -141,7 +141,6 @@ public class PickRoomCustomerCard extends CustomerReservationCardPanel {
         for (int i = 0; i < this.roomDetailsTable.getRowCount(); i++) {
             details.put((String)this.roomDetailsTable.getValueAt(i, 0), this.roomDetailsTable.getValueAt(i, 1));
         }
-        System.out.println(details);
         return details;
     }
 }
