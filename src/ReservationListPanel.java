@@ -41,10 +41,6 @@ public class ReservationListPanel extends JPanel {
         this.reservationsAreCancellable = reservationsAreCancellable;
         Object[][] sampleDetails = {{"ID", "FN", "LN", "ST", "ET", "#G", "$DC", "RT", "F", "C", "Be", "Ba", "HW", "SA"}};
         setReservationDetailsPane(sampleDetails);
-        if(!this.reservationsAreCancellable) {
-            String[] initialComboBoxContent = {"All reservations should go here to be cancellable"};
-            add(createCancelPanel(initialComboBoxContent), BorderLayout.SOUTH);
-        }
     }
 
     /**

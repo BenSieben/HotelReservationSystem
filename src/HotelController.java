@@ -297,11 +297,35 @@ public class HotelController {
      * Adds listeners to the manager panel
      */
     private void initializeManagerPanelListeners() {
-        ManagerPanel mp = this.view.getManagerPanel();
+        final ManagerPanel mp = this.view.getManagerPanel();
         mp.addLogoutButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 handleLogout();
+            }
+        });
+        mp.addViewCurrentReservationsPanelButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO set up and go to view current reservations view in manager panel
+                mp.changeCard(ManagerPanel.CURRENT_RESERVATIONS_PANEL);
+                System.err.println("View current reservations");
+            }
+        });
+        mp.addViewArchivedReservationsPanelButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO set up and go to view archived reservations view in manager panel
+                mp.changeCard(ManagerPanel.ARCHIVED_RESERVATIONS_PANEL);
+                System.err.println("View archived reservations");
+            }
+        });
+        mp.addViewRevenuePanelButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO set up and go to view revenue view in manager panel
+                mp.changeCard(ManagerPanel.REVENUE_PANEL);
+                System.err.println("View revenue");
             }
         });
     }

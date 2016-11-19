@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -22,6 +23,32 @@ public class ManagerPanel extends JPanel{
     // One last label for drawing messages directed to user
     private JLabel messageLabel;
 
+    // Components of action selection for hotel manager
+    private JButton viewCurrentReservationsPanelButton;
+    private JButton viewArchivedReservationsPanelButton;
+    private JButton viewRevenuePanelButton;
+
+    // The middle panel itself
+    private JPanel managerCards;
+
+    // The components of the three main panels in the manager panel
+    private JPanel currentReservationsPanel;
+    private ReservationListPanel currentReservationsList;
+
+    private JPanel archivedReservationsPanel;
+    private ReservationListPanel archivedReservationsList;
+
+    private JPanel viewRevenuePanel;
+    private JTextField yearMonthTextField;
+    private JButton yearMonthSubmitButton;
+    private JScrollPane revenuePane;
+    private JTable revenueTable;
+
+    // Constants for identifying the different cards in managerCards
+    public static final String CURRENT_RESERVATIONS_PANEL = "Reservations";
+    public static final String ARCHIVED_RESERVATIONS_PANEL = "Archives";
+    public static final String REVENUE_PANEL = "Revenue";
+
     /**
      * Creates a new ManagerPanel with default name
      * for Manager
@@ -38,8 +65,6 @@ public class ManagerPanel extends JPanel{
      */
     public ManagerPanel(String managerName) {
         super();
-
-        // TODO implement real manager panel
         setLayout(new BorderLayout());
 
         // Create top panel which lets manager log out
@@ -55,9 +80,55 @@ public class ManagerPanel extends JPanel{
 
         // Create middle panel which lets manager perform actions
         JPanel middlePanel = new JPanel();
+        middlePanel.setLayout(new BorderLayout());
         middlePanel.setBackground(new Color(204, 153, 255));
 
+        JPanel middleTopPanel = new JPanel();
+        middleTopPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        middleTopPanel.setOpaque(false);
+        this.viewCurrentReservationsPanelButton = new JButton("View Current Reservations");
+        this.viewArchivedReservationsPanelButton = new JButton("View Archived Reservations");
+        this.viewRevenuePanelButton = new JButton("View Revenue");
+        middleTopPanel.add(this.viewCurrentReservationsPanelButton);
+        middleTopPanel.add(this.viewArchivedReservationsPanelButton);
+        middleTopPanel.add(this.viewRevenuePanelButton);
 
+        this.managerCards = new JPanel();
+        this.managerCards.setLayout(new CardLayout());  // Flip through various actions hotel manager can perform
+        this.managerCards.setOpaque(false);
+
+        this.currentReservationsPanel = new JPanel();
+        this.currentReservationsPanel.setLayout(new GridLayout(0, 1));  // 1 component per row
+        this.currentReservationsPanel.setOpaque(false);
+        this.currentReservationsList = new ReservationListPanel(true);
+        this.currentReservationsPanel.add(this.currentReservationsList);
+        TitledBorder newBorder = new TitledBorder("View / Cancel Reservations");
+        newBorder.setTitleFont(new Font(null, Font.BOLD, 16));
+        this.currentReservationsPanel.setBorder(newBorder);
+
+        this.archivedReservationsPanel = new JPanel();
+        this.archivedReservationsPanel.setLayout(new GridLayout(0, 1));  // 1 component per row
+        this.archivedReservationsPanel.setOpaque(false);
+        this.archivedReservationsList = new ReservationListPanel(false);
+        this.archivedReservationsPanel.add(this.archivedReservationsList);
+        newBorder = new TitledBorder("View Reservation Archive");
+        newBorder.setTitleFont(new Font(null, Font.BOLD, 16));
+        this.archivedReservationsPanel.setBorder(newBorder);
+
+        this.viewRevenuePanel = new JPanel();
+        this.viewRevenuePanel.setLayout(new GridLayout(0, 1));  // 1 component per row
+        this.viewRevenuePanel.setOpaque(false);
+        // TODO add components to view revenue panel
+        newBorder = new TitledBorder("View Monthly / Weekly Revenue");
+        newBorder.setTitleFont(new Font(null, Font.BOLD, 16));
+        this.archivedReservationsPanel.setBorder(newBorder);
+
+        this.managerCards.add(this.currentReservationsPanel, ManagerPanel.CURRENT_RESERVATIONS_PANEL);
+        this.managerCards.add(this.archivedReservationsPanel, ManagerPanel.ARCHIVED_RESERVATIONS_PANEL);
+        this.managerCards.add(this.viewRevenuePanel, ManagerPanel.REVENUE_PANEL);
+
+        middlePanel.add(middleTopPanel, BorderLayout.NORTH);
+        middlePanel.add(this.managerCards, BorderLayout.CENTER);
 
         // Add all panels to the customer panel (and message label)
         add(topPanel, BorderLayout.NORTH);
@@ -111,6 +182,50 @@ public class ManagerPanel extends JPanel{
     public void setMessageLabel(String newMessage) {
         if(newMessage != null) {
             this.messageLabel.setText(newMessage);
+        }
+    }
+
+    /**
+     * Adds a new action listener to listen for the view current reservations button
+     * @param listener new action listener to add to view current reservations button
+     */
+    public void addViewCurrentReservationsPanelButtonListener(ActionListener listener) {
+        this.viewCurrentReservationsPanelButton.addActionListener(listener);
+    }
+
+    /**
+     * Adds a new action listener to listen for the view archived reservations button
+     * @param listener new action listener to add to view archived reservations button
+     */
+    public void addViewArchivedReservationsPanelButtonListener(ActionListener listener) {
+        this.viewArchivedReservationsPanelButton.addActionListener(listener);
+    }
+
+    /**
+     * Adds a new action listener to listen for the view revenue button
+     * @param listener new action listener to add to view revenue button
+     */
+    public void addViewRevenuePanelButtonListener(ActionListener listener) {
+        this.viewRevenuePanelButton.addActionListener(listener);
+    }
+
+    /**
+     * Changes the manager panel's currently shown JPanel to be
+     * the JPanel associated with the argument string,
+     * newCard (does nothing if newCard is invalid)
+     * @param newCard the string associated with the JPanel
+     *                to show (ex: ManagerPanel.CURRENT_RESERVATIONS_PANEL)
+     */
+    public void changeCard(String newCard) {
+        CardLayout cl = (CardLayout)(this.managerCards.getLayout());
+        if(CURRENT_RESERVATIONS_PANEL.equals(newCard)
+                || ARCHIVED_RESERVATIONS_PANEL.equals(newCard)
+                || REVENUE_PANEL.equals(newCard)) {
+            cl.show(this.managerCards, newCard);
+        }
+        else {
+            //  Tell user that their newCard is unrecognizable
+            System.err.println("Error: newCard \"" + newCard + "\" is not recognized by ManagerPanel!");
         }
     }
 }
