@@ -36,16 +36,6 @@ FOR EACH ROW
 //
 delimiter ;
 
--- Guest relation --
-DROP TABLE IF EXISTS Guest;
-CREATE TABLE Guest
-(
-    guest_id BIGINT AUTO_INCREMENT,  -- ID for guest
-    age INT NOT NULL,  -- Age of guest
-    PRIMARY KEY (guest_id)
-);
-ALTER TABLE Guest AUTO_INCREMENT = 11;
-
 -- Guest trigger (check age) --
 DROP TRIGGER IF EXISTS GuestInsertTrigger;
 delimiter //
@@ -59,16 +49,6 @@ FOR EACH ROW
   END;
 //
 delimiter ;
-
--- Customer_Guest relation --
-DROP TABLE IF EXISTS Customer_Guest;
-CREATE TABLE Customer_Guest
-(
-    customer_id BIGINT,  -- Primary Key from Customer
-    guest_id BIGINT,  -- Primary Key from Guest
-    FOREIGN KEY (customer_id) REFERENCES Customer (customer_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade customer_id changes
-    FOREIGN KEY (guest_id) REFERENCES Guest (guest_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade guest_id changes
-);
 
 -- Room relation --
 DROP TABLE IF EXISTS Room;
@@ -167,6 +147,7 @@ CREATE TABLE Booking_Room
 (
     booking_id BIGINT, -- Primary Key from Booking
     room_id BIGINT, -- Primary Key from Room
+    guests INT DEFAULT 0,  -- Number of guests booked for the Room
     FOREIGN KEY (booking_id) REFERENCES Booking (booking_id) ON UPDATE CASCADE ON DELETE CASCADE,  -- Cascade booking_id changes
     FOREIGN KEY (room_id) REFERENCES Room (room_id) ON UPDATE CASCADE ON DELETE CASCADE  -- Cascade room_id changes
 );
