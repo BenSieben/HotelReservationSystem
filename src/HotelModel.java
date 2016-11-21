@@ -8,6 +8,8 @@ public class HotelModel {
     private Connection conn = null;
     private PreparedStatement preparedStatement = null;
     private HashMap<String, Object> userSession = null;
+    private static final String checkOutTime = " 14:00:00";
+    private static final String checkInTime  = " 10:00:00";
     public HotelModel(Connection connection) {
         this.conn = connection;
     }
@@ -63,7 +65,7 @@ public class HotelModel {
     /*
      * This function should be called only when user is logged in
      * Input: none, user session already has customer_id
-     * Output: Booking time/changes, start datetime, end datetime, guests #, room #, room details
+     * Return: Booking time/changes, start datetime, end datetime, guests #, room #, room details
      */
     public ResultSet viewReservation() {
         try {
@@ -105,7 +107,7 @@ public class HotelModel {
     /*
      * After user enter desired date, this function shall display the available rooms.
      * Input: start and end date in HashMap data type, using 'YYYY-MM-DD' format
-     * Output: All available rooms (+room details) that do not conflict with the input dates.
+     * Return: All available rooms (+room details) that do not conflict with the input dates.
      */
     public ResultSet getAvailableRooms(HashMap<String, Object> data) {
         try {
@@ -113,8 +115,6 @@ public class HotelModel {
         	if(userSession == null){
         		return null;
         	}
-        	String checkOutTime = " 14:00:00";
-        	String checkInTime  = " 10:00:00";
             ResultSet result = null;
             String sql = "SELECT p1.*, p3.* FROM room p1, room_details p2, details p3 WHERE p1.room_id = p2.room_id AND p2.details_id = p3.details_id "
             		+ "AND p1.room_id NOT IN "
@@ -149,6 +149,127 @@ public class HotelModel {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
+        }
+    }
+
+    /*
+     * Get payment type by parsing an enum column in payment table.
+     * Input: none
+     * Return: Array of Payment types
+     */
+    public String[] getAllPaymentTypes() {
+        try {
+            ResultSet result = null;
+            String sql = "SELECT TRIM(TRAILING ')' FROM TRIM(LEADING '(' FROM TRIM(LEADING 'enum' FROM column_type))) column_type "
+            		+ "FROM information_schema.columns "
+            		+ "WHERE table_schema = 'hotel' AND table_name = 'payment' AND column_name = 'payment_type';";
+
+            this.preparedStatement = conn.prepareStatement(sql);
+            result = this.preparedStatement.executeQuery();
+
+            //Capitalize the first letter, and remove , and '' from result. Store each into an array.
+           if (result.next()) {
+        	   String[] split = result.getString("column_type").replace("'", "").split(",");
+               String[] finalResult = new String[split.length];
+        	   for(int i=0;i<split.length;i++){
+        		   finalResult[i] = split[i].substring(0, 1).toUpperCase() + split[i].substring(1);
+        	   }
+        	   return finalResult;
+            }
+
+           return null; //if result not found
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    /*
+     * This function finalize the booking by performing multiple inserts into the schema
+     * Input: payment_type, amount, start_date, end_date, room_id, guests
+     * Return: false if error occurs, true if successful
+     */
+    public boolean reserveRoom(HashMap<String, Object> data) {
+        try {
+        	//Cannot access unless logged in
+        	if(userSession == null){
+        		return false;
+        	}
+
+            ResultSet result = null;
+
+            //Insert into Booking table
+            String sql = "INSERT INTO Booking (updated_at) VALUES (NOW());";
+            this.preparedStatement = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            this.preparedStatement.executeUpdate();
+            result = this.preparedStatement.getGeneratedKeys();
+            int bookingId = 0;
+
+            if(result.next()){
+                bookingId = result.getInt(1);
+            }
+
+            //Insert into Payment table
+            sql = "INSERT INTO Payment (payment_type, amount, updated_at) VALUES (?,?,NOW());";
+            this.preparedStatement = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            this.preparedStatement.setObject(1, data.get("payment_type"));
+            this.preparedStatement.setObject(2, data.get("amount"));
+            this.preparedStatement.executeUpdate();
+
+            result = this.preparedStatement.getGeneratedKeys();
+            int paymentId = 0;
+
+            if(result.next()){
+                paymentId = result.getInt(1);
+            }
+
+            //Insert into Period table
+            sql = "INSERT INTO Period (start_date, end_date) VALUES (?,?);";
+            this.preparedStatement = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            this.preparedStatement.setObject(1, data.get("start_date") + checkInTime);
+            this.preparedStatement.setObject(2, data.get("end_date") + checkOutTime);
+            this.preparedStatement.executeUpdate();
+
+            result = this.preparedStatement.getGeneratedKeys();
+            int periodId = 0;
+
+            if(result.next()){
+                periodId = result.getInt(1);
+            }
+
+            //Insert into Booking_customer table
+            sql = "INSERT INTO Booking_customer (booking_id, customer_id) VALUES (?,?);";
+            this.preparedStatement = conn.prepareStatement(sql);
+            this.preparedStatement.setObject(1, bookingId);
+            this.preparedStatement.setObject(2, userSession.get("customer_id"));
+            this.preparedStatement.executeUpdate();
+
+            //Insert into Booking_payment table
+            sql = "INSERT INTO Booking_payment (booking_id, payment_id) VALUES (?,?);";
+            this.preparedStatement = conn.prepareStatement(sql);
+            this.preparedStatement.setObject(1, bookingId);
+            this.preparedStatement.setObject(2, paymentId);
+            this.preparedStatement.executeUpdate();
+
+            //Insert into Booking_period table
+            sql = "INSERT INTO Booking_period (booking_id, period_id) VALUES (?,?);";
+            this.preparedStatement = conn.prepareStatement(sql);
+            this.preparedStatement.setObject(1, bookingId);
+            this.preparedStatement.setObject(2, periodId);
+            this.preparedStatement.executeUpdate();
+
+            //Insert into Booking_room table
+            sql = "INSERT INTO Booking_room (booking_id, room_id, guests) VALUES (?,?,?);";
+            this.preparedStatement = conn.prepareStatement(sql);
+            this.preparedStatement.setObject(1, bookingId);
+            this.preparedStatement.setObject(2, data.get("room_id"));
+            this.preparedStatement.setObject(3, data.get("guests"));
+            this.preparedStatement.executeUpdate();
+
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
         }
     }
 }
