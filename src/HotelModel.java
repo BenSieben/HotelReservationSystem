@@ -101,4 +101,50 @@ public class HotelModel {
             return null;
         }
     }
+
+
+    public ResultSet getAvailableRooms(HashMap<String, Object> data) {
+        try {
+        	//Cannot access unless logged in
+        	if(userSession == null){
+        		return null;
+        	}
+        	String checkOutTime = " 14:00:00";
+        	String checkInTime  = " 10:00:00";
+            ResultSet result = null;
+            String sql = "SELECT p1.*, p3.* FROM room p1, room_details p2, details p3 WHERE p1.room_id = p2.room_id AND p2.details_id = p3.details_id "
+            		+ "AND p1.room_id NOT IN "
+            		+ "(SELECT t5.room_id FROM period t1, booking_period t2, booking t3, booking_room t4, room t5, room_details t6, details t7 " //subquery
+            		+ "WHERE t7.details_id = t6.details_id AND t6.room_id = t5.room_id AND t5.room_id = t4.room_id AND t4.booking_id = t3.booking_id "
+            		+ "AND t3.booking_id = t2.booking_id AND t2.period_id = t1.period_id AND "
+            		+ "((t1.start_date BETWEEN ? AND ?) OR (t1.end_date BETWEEN ?' AND ?)));";
+
+            this.preparedStatement = conn.prepareStatement(sql);
+            this.preparedStatement.setObject(1, data.get("start_date") + checkInTime);
+            this.preparedStatement.setObject(2, data.get("end_date") + checkOutTime);
+            this.preparedStatement.setObject(3, data.get("start_date") + checkInTime);
+            this.preparedStatement.setObject(4, data.get("end_date") + checkInTime);
+
+            result = this.preparedStatement.executeQuery();
+
+            ResultSetMetaData rsmd = result.getMetaData();//for debugging
+            int columnsNumber = rsmd.getColumnCount(); //for debugging
+
+            //for debugging
+            while (result.next()) {
+                for (int i = 1; i <= columnsNumber; i++) {
+                    if (i > 1) System.out.print(",  ");
+                    String columnValue = result.getString(i);
+                    System.out.print(columnValue + " " + rsmd.getColumnName(i));
+                }
+                System.out.println("");
+            }
+
+            result.beforeFirst();//move cursor back to beginning
+            return result;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 }
