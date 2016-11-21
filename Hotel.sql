@@ -36,20 +36,6 @@ FOR EACH ROW
 //
 delimiter ;
 
--- Guest trigger (check age) --
-DROP TRIGGER IF EXISTS GuestInsertTrigger;
-delimiter //
-CREATE TRIGGER GuestInsertTrigger
-BEFORE INSERT ON Customer
-FOR EACH ROW
-  BEGIN
-    IF NEW.age < 0 OR NEW.age > 200 THEN  -- If user is considered too young or too old, default their age to 18
-      SET NEW.age = 0;
-    END IF;
-  END;
-//
-delimiter ;
-
 -- Room relation --
 DROP TABLE IF EXISTS Room;
 CREATE TABLE Room
