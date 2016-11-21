@@ -51,7 +51,10 @@ public class ReservationListPanel extends JPanel {
     public void setReservationDetailsPane(Object[][] newDetails) {
         // Make new JTable
         this.reservationDetails = new JTable(newDetails, ReservationListPanel.COLUMN_NAMES);
-        this.reservationDetailsPane = new JScrollPane(this.reservationDetails);
+        this.reservationDetailsPane = new JScrollPane(this.reservationDetails,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        this.reservationDetails.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         this.reservationDetails.setFillsViewportHeight(true);
         this.reservationDetails.setOpaque(false);
 
