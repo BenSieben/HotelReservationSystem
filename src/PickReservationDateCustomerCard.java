@@ -8,7 +8,7 @@ import java.awt.*;
 public class PickReservationDateCustomerCard extends CustomerReservationCardPanel {
 
     // Start date and end date are (currently) entered via text field
-    private JTextField startDay, startTime, endDay, endTime;
+    private JTextField startDay, endDay;
 
     /**
      * Creates a new PickReservationDateCustomerCard
@@ -27,14 +27,6 @@ public class PickReservationDateCustomerCard extends CustomerReservationCardPane
         startDayPanel.add(this.startDay);
         startDayPanel.setOpaque(false);
 
-        JPanel startTimePanel = new JPanel();
-        JLabel startTimeLabel = new JLabel("Check-in time (in 24-hour time format) (HH:MM)");
-        // The seconds / milliseconds can be defaulted to zero
-        this.startTime = new JTextField(20);
-        startTimePanel.add(startTimeLabel);
-        startTimePanel.add(this.startTime);
-        startTimePanel.setOpaque(false);
-
         JPanel endDayPanel = new JPanel();
         JLabel endDayLabel = new JLabel("End date (YYYY-MM-DD)");
         this.endDay = new JTextField(20);
@@ -42,19 +34,9 @@ public class PickReservationDateCustomerCard extends CustomerReservationCardPane
         endDayPanel.add(this.endDay);
         endDayPanel.setOpaque(false);
 
-        JPanel endTimePanel = new JPanel();
-        JLabel endTimeLabel = new JLabel("Check-out time (in 24-hour time format) (HH:MM)");
-        // The seconds / milliseconds can be defaulted to zero
-        this.endTime = new JTextField(20);
-        endTimePanel.add(endTimeLabel);
-        endTimePanel.add(this.endTime);
-        endTimePanel.setOpaque(false);
-
         // Add all components to middle panel in right places
         middlePanel.add(startDayPanel);
-        middlePanel.add(startTimePanel);
         middlePanel.add(endDayPanel);
-        middlePanel.add(endTimePanel);
 
         // Use this middle panel as the new middle panel, and add a border describing it
         setMiddlePanel(middlePanel);
@@ -67,9 +49,7 @@ public class PickReservationDateCustomerCard extends CustomerReservationCardPane
      */
     public void resetAllFields() {
         this.startDay.setText("");
-        this.startTime.setText("");
         this.endDay.setText("");
-        this.endTime.setText("");
     }
 
     /**
@@ -81,26 +61,10 @@ public class PickReservationDateCustomerCard extends CustomerReservationCardPane
     }
 
     /**
-     * Returns text currently in start time field
-     * @return text currently in start time field
-     */
-    public String getStartTimeText() {
-        return this.startTime.getText();
-    }
-
-    /**
      * Returns text currently in end day field
      * @return text currently in end day field
      */
     public String getEndDateText() {
         return this.endDay.getText();
-    }
-
-    /**
-     * Returns text currently in end time field
-     * @return text currently in end time field
-     */
-    public String getEndTimeText() {
-        return this.endTime.getText();
     }
 }

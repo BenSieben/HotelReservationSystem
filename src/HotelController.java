@@ -87,7 +87,7 @@ public class HotelController {
      */
     private void initializePickReservationDateCustomerCardListeners() {
         final CustomerPanel cp = this.view.getCustomerPanel();
-        PickReservationDateCustomerCard cpDateCard = cp.getPickReservationDateCustomerCard();
+        final PickReservationDateCustomerCard cpDateCard = cp.getPickReservationDateCustomerCard();
         // We do not do anything when previous button is pressed on date card (since it is the first card),
         //   which is why there is no action listener for it
         cpDateCard.addNextButtonListener(new ActionListener() {
@@ -96,9 +96,10 @@ public class HotelController {
                 if(true) { // TODO use pickReservationDateCustomerCardFieldsAreValid() when testing full program
                     // TODO run query on database to find rooms that match the time frame specified by customer
                     //   and place such rooms in the pick room customer card
-                    // (also remember to attach seconds / milliseconds to end of times before submitting to DB)
                     // After that, the room buttons must be added to the pick room customer card and all the
                     //   action listeners must be wired to these buttons to show the room details
+                    String startDate = cpDateCard.getStartDateText();
+                    String endDate = cpDateCard.getEndDateText();
                     cp.goToNextCard();
                 }
                 else {
@@ -117,22 +118,17 @@ public class HotelController {
         // Pull all fields from the date card
         PickReservationDateCustomerCard cpDate = this.view.getCustomerPanel().getPickReservationDateCustomerCard();
         String startDate = cpDate.getStartDateText();
-        String startTime = cpDate.getStartTimeText();
         String endDate = cpDate.getEndDateText();
-        String endTime = cpDate.getEndTimeText();
 
         // Regular expressions to test fields against
         String dateRegex = "\\d{4}-\\d{2}-\\d{2}";
-        String timeRegex = "\\d{2}:\\d{2}";
 
-        // Check one: all dates and times match their regex
-        if(startDate.matches(dateRegex) && startTime.matches(timeRegex)
-                && endDate.matches(dateRegex) && endTime.matches(timeRegex)) {
-            // Check two: the given dates and times are realistic values
-            if(dateIsRealistic(startDate) && timeIsRealistic(startTime)
-                    && dateIsRealistic(endDate) && timeIsRealistic(endTime)) {
-                // Check three: start date and time is less than end date and time
-                return (startDate + startTime).compareTo((endDate + endTime)) < 0;
+        // Check one: the dates match their regex
+        if(startDate.matches(dateRegex) && endDate.matches(dateRegex)) {
+            // Check two: the given dates are realistic values
+            if(dateIsRealistic(startDate) && dateIsRealistic(endDate)) {
+                // Check three: start date is less than end date and time
+                return (startDate).compareTo(endDate) < 0;
             }
         }
         return false;  // This return catches any case where some bad field is detected
@@ -173,17 +169,6 @@ public class HotelController {
             }
         }
         return false; // This return catches any case where some bad date is detected
-    }
-
-    /**
-     * Determines if given time is realistic or not
-     * @param time HH:MM time string to check
-     * @return true if time is realistic, and false otherwise
-     */
-    private boolean timeIsRealistic(String time) {
-        int hour = Integer.parseInt(time.substring(0, time.indexOf(":")));
-        int minute = Integer.parseInt(time.substring(time.indexOf(":") + 1));
-        return (hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59);
     }
 
     /**
