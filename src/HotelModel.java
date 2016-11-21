@@ -102,7 +102,11 @@ public class HotelModel {
         }
     }
 
-
+    /*
+     * After user enter desired date, this function shall display the available rooms.
+     * Input: start and end date in HashMap data type, using 'YYYY-MM-DD' format
+     * Output: All available rooms (+room details) that do not conflict with the input dates.
+     */
     public ResultSet getAvailableRooms(HashMap<String, Object> data) {
         try {
         	//Cannot access unless logged in
