@@ -98,7 +98,9 @@ public class CustomerPanel extends JPanel {
         this.selectGuestsCustomerCard = new SelectGuestsCustomerCard();
         this.paymentCustomerCard = new PaymentCustomerCard();
         this.confirmReservationCustomerCard = new ConfirmReservationCustomerCard();
-        this.viewReservationsCustomerCard = new ViewReservationsCustomerCard(new ReservationListPanel(true));
+        this.viewReservationsCustomerCard = new ViewReservationsCustomerCard(
+                new ReservationListPanel(true),
+                new ReservationListPanel(false));
 
         this.customerCards.add(this.pickReservationDateCustomerCard, CustomerPanel.PICK_DATE_PANEL);
         this.customerCards.add(this.pickRoomCustomerCard, CustomerPanel.PICK_ROOM_PANEL);
@@ -255,7 +257,6 @@ public class CustomerPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // On cancel button, reset all fields
-                System.err.println("cancel");
                 resetAllFields();
             }
         });
