@@ -57,10 +57,10 @@ public class ViewReservationsCustomerCard extends JPanel {
 
     /**
      * Sets archivedReservations in the reservation list panel to match newDetails
-     * @param newDetaisls archived reservation data to display
+     * @param newDetails archived reservation data to display
      */
-    public void setArchivedReservationsDetailsPant(Object[][] newDetaisls) {
-        this.archivedReservations.setReservationDetailsPane(newDetaisls);
+    public void setArchivedReservationsDetailsPane(Object[][] newDetails) {
+        this.archivedReservations.setReservationDetailsPane(newDetails);
     }
 
     /**
