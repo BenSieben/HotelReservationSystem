@@ -1,6 +1,8 @@
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HotelController {
@@ -88,23 +90,54 @@ public class HotelController {
     private void initializePickReservationDateCustomerCardListeners() {
         final CustomerPanel cp = this.view.getCustomerPanel();
         final PickReservationDateCustomerCard cpDateCard = cp.getPickReservationDateCustomerCard();
+        final PickRoomCustomerCard cpRoomCard = cp.getPickRoomCustomerCard();
         // We do not do anything when previous button is pressed on date card (since it is the first card),
         //   which is why there is no action listener for it
         cpDateCard.addNextButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(true) { // TODO use pickReservationDateCustomerCardFieldsAreValid() when testing full program
-                    // TODO run query on database to find rooms that match the time frame specified by customer
-                    //   and place such rooms in the pick room customer card
-                    // After that, the room buttons must be added to the pick room customer card and all the
-                    //   action listeners must be wired to these buttons to show the room details
-                    String startDate = cpDateCard.getStartDateText();
-                    String endDate = cpDateCard.getEndDateText();
-                    cp.goToNextCard();
+                if(pickReservationDateCustomerCardFieldsAreValid()) {
+                    HashMap<String, Object> reservationDates = new HashMap<String, Object>();
+                    reservationDates.put("start_date", cpDateCard.getStartDateText());
+                    reservationDates.put("end_date", cpDateCard.getEndDateText());
+                    ResultSet availableRooms = model.getAvailableRooms(reservationDates);
+                    try {
+                        ArrayList<JButton> roomButtonsList = new ArrayList<JButton>();
+                        while(availableRooms.next()) {
+                            int roomId = availableRooms.getInt("room_id");
+                            int roomNumber = availableRooms.getInt("room_number");
+                            double price = availableRooms.getDouble("price");
+                            String roomType = availableRooms.getString("room_type");
+                            int floor = availableRooms.getInt("floor");
+                            int capacity = availableRooms.getInt("capacity");
+                            int beds = availableRooms.getInt("beds");
+                            int bathrooms = availableRooms.getInt("bathrooms");
+                            boolean hasWindows = availableRooms.getBoolean("has_windows");
+                            boolean smokingAllowed = availableRooms.getBoolean("smoking_allowed");
+                            final Object[][] availableRoomDetails = {{"Detail", "Value"}, {"Room ID", roomId},
+                                {"Room Number", roomNumber}, {"Price", "$ " + price}, {"Room Type", roomType},
+                                {"Floor", floor}, {"Capacity", capacity}, {"Beds", beds}, {"Bathrooms", bathrooms},
+                                {"Has Windows", hasWindows}, {"Smoking Allowed", smokingAllowed}};
+                            JButton currentRoomButton = new JButton("Room Number: " +
+                                    roomNumber + " (" + roomType + " Room)");
+                            currentRoomButton.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    cpRoomCard.setRoomDetailsPane(availableRoomDetails);
+                                }
+                            });
+                            roomButtonsList.add(currentRoomButton);
+                        }
+                        cpRoomCard.setRoomListPane(roomButtonsList);
+                        cp.goToNextCard();
+                    }
+                    catch(Exception ex) {
+                        System.err.println(ex.toString());
+                    }
                 }
                 else {
-                    cp.setMessageLabel("Error: invalid date and / or time fields detected. " +
-                            "Make sure your dates and times are filled correctly (and are realistic times).");
+                    cp.setMessageLabel("Error: invalid date field(s) detected. " +
+                            "Make sure your dates are filled correctly (and are realistic).");
                 }
             }
         });
@@ -120,14 +153,14 @@ public class HotelController {
         String startDate = cpDate.getStartDateText();
         String endDate = cpDate.getEndDateText();
 
-        // Regular expressions to test fields against
+        // Regular expression to test fields against
         String dateRegex = "\\d{4}-\\d{2}-\\d{2}";
 
         // Check one: the dates match their regex
         if(startDate.matches(dateRegex) && endDate.matches(dateRegex)) {
             // Check two: the given dates are realistic values
             if(dateIsRealistic(startDate) && dateIsRealistic(endDate)) {
-                // Check three: start date is less than end date and time
+                // Check three: start date is less than end date
                 return (startDate).compareTo(endDate) < 0;
             }
         }
@@ -188,6 +221,7 @@ public class HotelController {
             public void actionPerformed(ActionEvent e) {
                 // TODO make sure customer actually selected a room before going to next card
                 HashMap<String, Object> roomDetails = cpRoomCard.getLastSelectedRoomDetails();
+                System.out.println(roomDetails);
                 cp.goToNextCard();
             }
         });
@@ -420,5 +454,6 @@ public class HotelController {
         // Clear all panels of content, then go back to login panel
         this.view.resetAllPanels();
         this.view.changeCard(HotelView.LOGIN_PANEL);
+        this.model.signOut();
     }
 }

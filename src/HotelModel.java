@@ -121,7 +121,7 @@ public class HotelModel {
             		+ "(SELECT t5.room_id FROM period t1, booking_period t2, booking t3, booking_room t4, room t5, room_details t6, details t7 " //subquery
             		+ "WHERE t7.details_id = t6.details_id AND t6.room_id = t5.room_id AND t5.room_id = t4.room_id AND t4.booking_id = t3.booking_id "
             		+ "AND t3.booking_id = t2.booking_id AND t2.period_id = t1.period_id AND "
-            		+ "((t1.start_date BETWEEN ? AND ?) OR (t1.end_date BETWEEN ?' AND ?)));";
+            		+ "((t1.start_date BETWEEN ? AND ?) OR (t1.end_date BETWEEN ? AND ?)));";
 
             this.preparedStatement = conn.prepareStatement(sql);
             this.preparedStatement.setObject(1, data.get("start_date") + checkInTime);

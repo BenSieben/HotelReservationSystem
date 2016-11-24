@@ -38,7 +38,7 @@ public class PickRoomCustomerCard extends CustomerReservationCardPanel {
      * Resets all fields in the panel to default values
      */
     public void resetAllFields() {
-        setRoomListPane(new ArrayList<String>());  // Empty array list of rooms is default
+        setRoomListPane(new ArrayList<JButton>());  // Empty array list of rooms is default
         Object[][] sampleDetails = {{"Details go here", "after picking room"}};
         setRoomDetailsPane(sampleDetails);
     }
@@ -47,18 +47,17 @@ public class PickRoomCustomerCard extends CustomerReservationCardPanel {
      * Sets the room list panel to have a list of buttons
      * which all correspond to rooms available to select
      * details for
-     * @param rooms text to place on each button in the room list pane
+     * @param rooms list of buttons to place in room list pane (they should have
+     *              listeners already attached to them to change room details pane)
      */
-    public void setRoomListPane(ArrayList<String> rooms) {
+    public void setRoomListPane(ArrayList<JButton> rooms) {
         // Set up the room list pane to hold the new buttons
         JPanel roomListPanel = new JPanel();
         roomListPanel.setLayout(new GridLayout(0, 1));  // 1 component per line
-        this.roomListButtons = new ArrayList<JButton>();
+        this.roomListButtons = rooms;
 
         for (int i = 0; i < rooms.size(); i++) {  // For each string in rooms, make a new JButton and add it to roomListButtons / roomListPanel
-            JButton roomButton = new JButton(rooms.get(i));
-            this.roomListButtons.add(roomButton);
-            roomListPanel.add(roomButton);
+            roomListPanel.add(rooms.get(i));
         }
 
         if(rooms.size() == 0) { // Handle exceptional case when there are no available rooms

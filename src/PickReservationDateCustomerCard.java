@@ -23,6 +23,7 @@ public class PickReservationDateCustomerCard extends CustomerReservationCardPane
         JPanel startDayPanel = new JPanel();
         JLabel startDateLabel = new JLabel("Start date (YYYY-MM-DD)");
         this.startDay = new JTextField(20);
+        this.startDay.setText("2016-11-24");
         startDayPanel.add(startDateLabel);
         startDayPanel.add(this.startDay);
         startDayPanel.setOpaque(false);
@@ -30,6 +31,7 @@ public class PickReservationDateCustomerCard extends CustomerReservationCardPane
         JPanel endDayPanel = new JPanel();
         JLabel endDayLabel = new JLabel("End date (YYYY-MM-DD)");
         this.endDay = new JTextField(20);
+        this.endDay.setText("2016-11-29");
         endDayPanel.add(endDayLabel);
         endDayPanel.add(this.endDay);
         endDayPanel.setOpaque(false);

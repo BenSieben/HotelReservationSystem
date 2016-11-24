@@ -256,8 +256,9 @@ public class CustomerPanel extends JPanel {
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // On cancel button, reset all fields
+                // On cancel button, reset all fields and send user back to pick date card
                 resetAllFields();
+                goToMakeNewReservationView();
             }
         });
         JPanel cancelButtonPanel = new JPanel();
