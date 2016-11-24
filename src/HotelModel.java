@@ -135,14 +135,14 @@ public class HotelModel {
             int columnsNumber = rsmd.getColumnCount(); //for debugging
 
             //for debugging
-            while (result.next()) {
+            /*while (result.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
                     if (i > 1) System.out.print(",  ");
                     String columnValue = result.getString(i);
                     System.out.print(columnValue + " " + rsmd.getColumnName(i));
                 }
                 System.out.println("");
-            }
+            }*/
 
             result.beforeFirst();//move cursor back to beginning
             return result;

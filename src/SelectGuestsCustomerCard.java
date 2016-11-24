@@ -20,6 +20,7 @@ public class SelectGuestsCustomerCard extends CustomerReservationCardPanel {
         JPanel middlePanel = new JPanel();
         JLabel numGuestsLabel = new JLabel("How many guests do you plan to bring with you?");
         this.numGuests = new JTextField(10);
+        this.numGuests.setText("0");
         middlePanel.add(numGuestsLabel);
         middlePanel.add(this.numGuests);
         numGuestsLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -34,7 +35,7 @@ public class SelectGuestsCustomerCard extends CustomerReservationCardPanel {
      * Resets all fields in the panel
      */
     public void resetAllFields() {
-        this.numGuests.setText("");
+        this.numGuests.setText("0");
     }
 
     /**

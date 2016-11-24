@@ -86,6 +86,14 @@ public class PaymentCustomerCard extends CustomerReservationCardPanel {
     }
 
     /**
+     * Returns the total cost of the reservation
+     * @return the total cost of the reservation
+     */
+    public String getTotalCostText() {
+        return this.totalCost.getText();
+    }
+
+    /**
      * Returns the currently selected payment type in the
      * payment type combo box
      * @return currently selected payment type

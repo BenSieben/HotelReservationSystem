@@ -9,10 +9,12 @@ public class HotelController {
 
     private HotelModel model;
     private HotelView view;
+    private HashMap<String, Object> reserveRoomData;  // Holds needed details to reserve a room (as a customer)
 
     public HotelController(HotelModel model, HotelView view) {
         this.model = model;
         this.view = view;
+        this.reserveRoomData = new HashMap<String, Object>();
     }
 
     /**
@@ -100,6 +102,11 @@ public class HotelController {
                     HashMap<String, Object> reservationDates = new HashMap<String, Object>();
                     reservationDates.put("start_date", cpDateCard.getStartDateText());
                     reservationDates.put("end_date", cpDateCard.getEndDateText());
+
+                    // Add start / end days to the reserveRoomData
+                    reserveRoomData.put("start_date", cpDateCard.getStartDateText());
+                    reserveRoomData.put("end_date", cpDateCard.getEndDateText());
+
                     ResultSet availableRooms = model.getAvailableRooms(reservationDates);
                     try {
                         ArrayList<JButton> roomButtonsList = new ArrayList<JButton>();
@@ -115,7 +122,7 @@ public class HotelController {
                             boolean hasWindows = availableRooms.getBoolean("has_windows");
                             boolean smokingAllowed = availableRooms.getBoolean("smoking_allowed");
                             final Object[][] availableRoomDetails = {{"Detail", "Value"}, {"Room ID", roomId},
-                                {"Room Number", roomNumber}, {"Price", "$ " + price}, {"Room Type", roomType},
+                                {"Room Number", roomNumber}, {"Price", "$" + price}, {"Room Type", roomType},
                                 {"Floor", floor}, {"Capacity", capacity}, {"Beds", beds}, {"Bathrooms", bathrooms},
                                 {"Has Windows", hasWindows}, {"Smoking Allowed", smokingAllowed}};
                             JButton currentRoomButton = new JButton("Room Number: " +
@@ -221,8 +228,15 @@ public class HotelController {
             public void actionPerformed(ActionEvent e) {
                 // TODO make sure customer actually selected a room before going to next card
                 HashMap<String, Object> roomDetails = cpRoomCard.getLastSelectedRoomDetails();
-                System.out.println(roomDetails);
-                cp.goToNextCard();
+                if(roomDetails.size() > 1) {  // Customer did pick a room to reserve
+                    // Add room ID and room capacity to the reserveRoomData
+                    reserveRoomData.put("room_id", roomDetails.get("Room ID"));
+                    reserveRoomData.put("capacity", roomDetails.get("Capacity"));
+                    cp.goToNextCard();
+                }
+                else {  // Customer did not pick a room to reserve
+                    cp.setMessageLabel("Error: you must pick a room to reserve to proceed!");
+                }
             }
         });
     }
@@ -233,6 +247,7 @@ public class HotelController {
     private void initializeSelectGuestsCustomerCardListeners() {
         final CustomerPanel cp = this.view.getCustomerPanel();
         final SelectGuestsCustomerCard cpGuestCard = cp.getSelectGuestsCustomerCard();
+        final PaymentCustomerCard cpPaymentCard = cp.getPaymentCustomerCard();
         cpGuestCard.addPreviousButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -242,10 +257,26 @@ public class HotelController {
         cpGuestCard.addNextButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO prepare payment card with total cost (and payment options)
-                // TODO check that the number of guests selected by the user is within recommended range
-                String numGuestsText = cpGuestCard.getNumGuestsText();
-                cp.goToNextCard();
+                try {
+                    String numGuestsText = cpGuestCard.getNumGuestsText();
+                    // Check that number of guests selected by user is within recommended range
+                    int numGuests = Integer.parseInt(numGuestsText);
+                    // + 1 to include person making reservation (it is assumed they will also be in the room besides the guests)
+                    if(numGuests + 1 <= (Integer)reserveRoomData.get("capacity")) {
+                        reserveRoomData.put("guests", numGuests);
+                        String[] paymentTypes = model.getAllPaymentTypes();
+                        cpPaymentCard.setPaymentTypes(paymentTypes);
+                        // TODO prepare payment card with total cost
+                        cp.goToNextCard();
+                    }
+                    else {
+                        cp.setMessageLabel("Error: number of guests would exceed recommended " +
+                                " number of guests for the selected room to reserve");
+                    }
+                }
+                catch(Exception ex) {
+                    cp.setMessageLabel("Error: please enter an actual number of guests");
+                }
             }
         });
     }
@@ -265,11 +296,21 @@ public class HotelController {
         cpPaymentCard.addNextButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO prepare receipt card (if not already done in other listeners)
-                // From the payment card, once they hit next we can determine their chosen payment type
-                //   (make the 2D object array for ConfirmReservationCustomerCard's setReservationDetailsPane method)
-                String selectedPaymentType = cpPaymentCard.getCurrentlySelectedPaymentType();
-                cp.goToNextCard();
+                try {
+                    // TODO prepare receipt card (if not already done in other listeners)
+                    // From the payment card, once they hit next we can determine their chosen payment type
+                    //   (make the 2D object array for ConfirmReservationCustomerCard's setReservationDetailsPane method)
+
+                    String selectedPaymentType = cpPaymentCard.getCurrentlySelectedPaymentType();
+                    reserveRoomData.put("payment_type", selectedPaymentType);
+                    String totalCostText = cpPaymentCard.getTotalCostText();
+                    double totalCost = Double.parseDouble(totalCostText.substring(1));  // Skip the $ sign at beginning of string
+                    reserveRoomData.put("amount", totalCost);
+                    cp.goToNextCard();
+                }
+                catch(Exception ex) {
+                    cp.setMessageLabel("Error: total cost is in an unreadable format!");
+                }
             }
         });
     }
@@ -289,11 +330,8 @@ public class HotelController {
         cpReceiptCard.addNextButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO submit the customer's reservation to the database
-                //   all entered reservation data to be reset to defaults
-
-                // TODO uncomment these two lines when ready to use actual program behavior
-                //   by clearing all make new reservation panels and going back to first make new reservation panel
+                // TODO uncomment these lines when ready to test submitting a new reservation to database
+                //model.reserveRoom(reserveRoomData);
                 //cp.resetAllFields();
                 //cp.goToMakeNewReservationView();
             }
