@@ -81,7 +81,38 @@ public class HotelController {
         cp.addViewReservationsButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cp.goToViewReservationView();
+                final ViewReservationsCustomerCard cpViewReservationsCard = cp.getViewReservationsCustomerCard();
+                try {
+                    // TODO load customer reservations into the customer reservation view and archive view
+                    ResultSet customerReservations = model.viewReservation();
+                    ArrayList<Object[]> reservationList = new ArrayList<Object[]>();
+                    while(customerReservations.next()) {
+                        String updatedAt = customerReservations.getString("updated_at");
+                        String start_date = customerReservations.getString("start_date");
+                        String end_date = customerReservations.getString("end_date");
+                        int guests = customerReservations.getInt("guests");
+                        int roomNumber = customerReservations.getInt("room_number");
+                        int detailsId = customerReservations.getInt("details_id");
+                        double price = customerReservations.getDouble("price");
+                        String roomType = customerReservations.getString("room_type");
+                        int floor = customerReservations.getInt("floor");
+                        int capacity = customerReservations.getInt("capacity");
+                        int beds = customerReservations.getInt("beds");
+                        int bathrooms = customerReservations.getInt("bathrooms");
+                        boolean hasWindows = customerReservations.getBoolean("has_windows");
+                        boolean smokingAllowed = customerReservations.getBoolean("smoking_allowed");
+                        Object[] reservationDetails = {"BookID", "FirstName", "LastName", start_date, end_date,
+                            guests, "$" + price, roomType, floor, capacity, beds, bathrooms, hasWindows, smokingAllowed};
+                        reservationList.add(reservationDetails);
+                    }
+                    Object[][] reservationArray = reservationList.toArray(new Object[reservationList.size()][ReservationListPanel.COLUMN_NAMES.length]);
+                    cpViewReservationsCard.setCurrentReservationDetailsPane(reservationArray);
+
+                    cp.goToViewReservationView();
+                }
+                catch(Exception ex) {
+                    cp.setMessageLabel("Error: unable to load reservation data");
+                }
             }
         });
     }
