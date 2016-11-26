@@ -75,7 +75,7 @@ public class HotelModel {
         	}
 
             ResultSet result = null;
-            String sql = "SELECT t2.updated_at, t4.start_date, t4.end_date, t5.guests, t6.room_number, t8.* " +
+            String sql = "SELECT t2.*, t4.start_date, t4.end_date, t5.guests, t6.room_number, t8.* " +
             		 "FROM booking_customer t1, booking t2, booking_period t3, period t4, booking_room t5, room t6, room_details t7, details t8 " +
             		"WHERE ? = t1.customer_id AND t1.booking_id = t2.booking_id AND t2.booking_id = t3.booking_id AND t3.period_id = t4.period_id " +
             		 "AND t5.booking_id = t2.booking_id AND t5.room_id = t6.room_id AND t6.room_id = t7.room_id AND t7.details_id = t8.details_id;";
@@ -272,4 +272,82 @@ public class HotelModel {
             return false;
         }
     }
+    
+    /*
+     * Delete specific reservation from a customer's reservation. Frontend determines if user has access.
+     * Input:  booking ID to be deleted
+     * Return:  true if successful, false if error occurs
+     */
+    public boolean deleteReservation(HashMap<String, Object> data) {
+        try {
+            String sql = "";
+            
+            //Delete from payment first
+            sql = "DELETE pm FROM Payment pm JOIN Booking_payment bp ON pm.payment_id = bp.payment_id WHERE booking_id = ?;";
+            this.preparedStatement = conn.prepareStatement(sql);
+            this.preparedStatement.setObject(1, data.get("booking_id"));
+            this.preparedStatement.executeUpdate();
+            
+            //Delete from period
+            sql = "DELETE pd FROM Period pd JOIN Booking_period bp ON pd.period_id = bp.period_id WHERE booking_id = ?;";
+            this.preparedStatement = conn.prepareStatement(sql);
+            this.preparedStatement.setObject(1, data.get("booking_id"));
+            this.preparedStatement.executeUpdate();
+            
+            //Delete from booking will also delete the foreign keys
+            sql = "DELETE FROM Booking WHERE booking_id = ?;";
+            this.preparedStatement = conn.prepareStatement(sql);
+            this.preparedStatement.setObject(1, data.get("booking_id"));
+            this.preparedStatement.executeUpdate();
+            
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+    
+    /*
+     * Update the number of guests from an existing reservation.
+     * Input: number of guests, booking ID that needs to be updated
+     * Return: true if successful, false if error occurs
+     */
+    public boolean updateReservation(HashMap<String, Object> data) {
+        try {
+            String sql = "UPDATE booking_room SET guests= ? WHERE booking_id = ?; ";
+
+            this.preparedStatement = conn.prepareStatement(sql);
+            this.preparedStatement.setObject(1, data.get("guests"));
+            this.preparedStatement.setObject(2, data.get("booking_id"));
+            this.preparedStatement.executeUpdate();
+
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+    
+    /*
+     * In case front-end system loses current user ID
+     * Input: none
+     * Return: customer_id if exists, if not exists, returns -1
+     */
+    public int getCurrentUserID(){
+    	try{
+    		
+    	
+	    	if(userSession == null){
+	    		return -1;
+	    	}
+	    	else{
+	    		return (Integer) userSession.get("customer_id");
+	    	}
+    	}catch(Exception e){
+            System.out.println(e.getMessage());
+            return -1;
+
+    	}
+    }
+    
 }
