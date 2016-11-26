@@ -192,7 +192,7 @@ public class HotelController {
         String endDate = cpDate.getEndDateText();
 
         // Regular expression to test fields against
-        String dateRegex = "\\d{4}-\\d{2}-\\d{2}";
+        String dateRegex = "^\\d{4}-\\d{2}-\\d{2}$";
 
         // Check one: the dates match their regex
         if(startDate.matches(dateRegex) && endDate.matches(dateRegex)) {
