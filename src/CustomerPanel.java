@@ -189,6 +189,7 @@ public class CustomerPanel extends JPanel {
         this.paymentCustomerCard.resetAllFields();
         this.confirmReservationCustomerCard.resetAllFields();
         this.messageLabel.setText("Any important messages will appear here");
+        goToMakeNewReservationView();
     }
 
     /**

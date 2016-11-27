@@ -81,37 +81,8 @@ public class HotelController {
         cp.addViewReservationsButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                final ViewReservationsCustomerCard cpViewReservationsCard = cp.getViewReservationsCustomerCard();
-                try {
-                    // TODO load customer reservations into the customer reservation view and archive view
-                    ResultSet customerReservations = model.viewReservation();
-                    ArrayList<Object[]> reservationList = new ArrayList<Object[]>();
-                    while(customerReservations.next()) {
-                        String updatedAt = customerReservations.getString("updated_at");
-                        String start_date = customerReservations.getString("start_date");
-                        String end_date = customerReservations.getString("end_date");
-                        int guests = customerReservations.getInt("guests");
-                        int roomNumber = customerReservations.getInt("room_number");
-                        int detailsId = customerReservations.getInt("details_id");
-                        double price = customerReservations.getDouble("price");
-                        String roomType = customerReservations.getString("room_type");
-                        int floor = customerReservations.getInt("floor");
-                        int capacity = customerReservations.getInt("capacity");
-                        int beds = customerReservations.getInt("beds");
-                        int bathrooms = customerReservations.getInt("bathrooms");
-                        boolean hasWindows = customerReservations.getBoolean("has_windows");
-                        boolean smokingAllowed = customerReservations.getBoolean("smoking_allowed");
-                        Object[] reservationDetails = {"BookID", "FirstName", "LastName", start_date, end_date,
-                            guests, "$" + price, roomType, floor, capacity, beds, bathrooms, hasWindows, smokingAllowed};
-                        reservationList.add(reservationDetails);
-                    }
-                    Object[][] reservationArray = reservationList.toArray(new Object[reservationList.size()][ReservationListPanel.COLUMN_NAMES.length]);
-                    cpViewReservationsCard.setCurrentReservationDetailsPane(reservationArray);
-
+                if(loadCustomerCurrentReservations()) {
                     cp.goToViewReservationView();
-                }
-                catch(Exception ex) {
-                    cp.setMessageLabel("Error: unable to load reservation data");
                 }
             }
         });
@@ -152,8 +123,8 @@ public class HotelController {
                             int bathrooms = availableRooms.getInt("bathrooms");
                             boolean hasWindows = availableRooms.getBoolean("has_windows");
                             boolean smokingAllowed = availableRooms.getBoolean("smoking_allowed");
-                            final Object[][] availableRoomDetails = {{"Detail", "Value"}, {"Room ID", roomId},
-                                {"Room Number", roomNumber}, {"Price", "$" + price}, {"Room Type", roomType},
+                            final Object[][] availableRoomDetails = {{"Room ID", roomId},
+                                {"Room Number", roomNumber}, {"Daily Price", "$" + price}, {"Room Type", roomType},
                                 {"Floor", floor}, {"Capacity", capacity}, {"Beds", beds}, {"Bathrooms", bathrooms},
                                 {"Has Windows", hasWindows}, {"Smoking Allowed", smokingAllowed}};
                             JButton currentRoomButton = new JButton("Room Number: " +
@@ -257,12 +228,20 @@ public class HotelController {
         cpRoomCard.addNextButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO make sure customer actually selected a room before going to next card
                 HashMap<String, Object> roomDetails = cpRoomCard.getLastSelectedRoomDetails();
                 if(roomDetails.size() > 1) {  // Customer did pick a room to reserve
                     // Add room ID and room capacity to the reserveRoomData
                     reserveRoomData.put("room_id", roomDetails.get("Room ID"));
                     reserveRoomData.put("capacity", roomDetails.get("Capacity"));
+                    // Also add other details (for the receipt)
+                    reserveRoomData.put("room_number", roomDetails.get("Room Number"));
+                    reserveRoomData.put("daily_price", roomDetails.get("Daily Price"));
+                    reserveRoomData.put("room_type", roomDetails.get("Room Type"));
+                    reserveRoomData.put("floor", roomDetails.get("Floor"));
+                    reserveRoomData.put("beds", roomDetails.get("Beds"));
+                    reserveRoomData.put("bathrooms", roomDetails.get("Bathrooms"));
+                    reserveRoomData.put("has_windows", roomDetails.get("Has Windows"));
+                    reserveRoomData.put("smoking_allowed", roomDetails.get("Smoking Allowed"));
                     cp.goToNextCard();
                 }
                 else {  // Customer did not pick a room to reserve
@@ -293,7 +272,7 @@ public class HotelController {
                     // Check that number of guests selected by user is within recommended range
                     int numGuests = Integer.parseInt(numGuestsText);
                     // + 1 to include person making reservation (it is assumed they will also be in the room besides the guests)
-                    if(numGuests + 1 <= (Integer)reserveRoomData.get("capacity")) {
+                    if(numGuests + 1 <= (Integer)reserveRoomData.get("capacity") && numGuests >= 0) {
                         reserveRoomData.put("guests", numGuests);
                         String[] paymentTypes = model.getAllPaymentTypes();
                         cpPaymentCard.setPaymentTypes(paymentTypes);
@@ -318,6 +297,7 @@ public class HotelController {
     private void initializePaymentCustomerCardListeners() {
         final CustomerPanel cp = this.view.getCustomerPanel();
         final PaymentCustomerCard cpPaymentCard = cp.getPaymentCustomerCard();
+        final ConfirmReservationCustomerCard cpReceiptCard = cp.getConfirmReservationCustomerCard();
         cpPaymentCard.addPreviousButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -337,6 +317,18 @@ public class HotelController {
                     String totalCostText = cpPaymentCard.getTotalCostText();
                     double totalCost = Double.parseDouble(totalCostText.substring(1));  // Skip the $ sign at beginning of string
                     reserveRoomData.put("amount", totalCost);
+
+                    System.out.println(reserveRoomData);
+                    Object[][] receiptData = {{"Start Date", reserveRoomData.get("start_date")},
+                            {"End Date", reserveRoomData.get("end_date")}, {"Room ID", reserveRoomData.get("room_id")},
+                            {"Room Number", reserveRoomData.get("room_number")}, {"Daily Price", reserveRoomData.get("daily_price")},
+                            {"Total Price", reserveRoomData.get("amount")}, {"Payment Type", reserveRoomData.get("payment_type")},
+                            {"Room Type", reserveRoomData.get("room_type")}, {"Floor", reserveRoomData.get("floor")},
+                            {"Capacity", reserveRoomData.get("capacity")}, {"Number of Guests", reserveRoomData.get("guests")},
+                            {"Beds", reserveRoomData.get("beds")}, {"Bathrooms", reserveRoomData.get("bathrooms")},
+                            {"Has Windows", reserveRoomData.get("has_windows")}, {"Smoking Allowed", reserveRoomData.get("smoking_allowed")}};
+                    cpReceiptCard.setReservationDetailsPane(receiptData);
+
                     cp.goToNextCard();
                 }
                 catch(Exception ex) {
@@ -361,10 +353,10 @@ public class HotelController {
         cpReceiptCard.addNextButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO uncomment these lines when ready to test submitting a new reservation to database
-                //model.reserveRoom(reserveRoomData);
-                //cp.resetAllFields();
-                //cp.goToMakeNewReservationView();
+                // TODO make sure reserving the room works (once it is ready for testing)
+                model.reserveRoom(reserveRoomData);
+                cp.resetAllFields();
+                cp.goToMakeNewReservationView();
             }
         });
     }
@@ -378,8 +370,58 @@ public class HotelController {
         cpViewReservationCard.addCancelReservationButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO delete selected reservation, then reload new list of reservations back into the reservation list panel
-                System.err.println("Deleting reservation " + cpViewReservationCard.getCurrentlySelectedReservationToCancel());
+                try {
+                    // TODO delete selected reservation, then reload new list of reservations back into the reservation list panel
+                    int bookingID = Integer.parseInt(cpViewReservationCard.getCurrentlySelectedReservationToCancel());
+                    HashMap<String, Object> data = new HashMap<String, Object>();
+                    data.put("booking_id", bookingID);
+                    if(model.deleteReservation(data)) {
+                        loadCustomerCurrentReservations();  // Reload customer reservations on successful delete
+                    }
+                    else {
+                        cp.setMessageLabel("Error: unable to delete selected booking!");
+                    }
+                }
+                catch(Exception ex) {
+                    cp.setMessageLabel("Error: booking ID is not correct format (integer)!");
+                    ex.printStackTrace();
+                }
+            }
+        });
+        cpViewReservationCard.addChangeNumGuestsButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO let user specify new number of guests to put in selected room
+                int bookingID = Integer.parseInt(cpViewReservationCard.getCurrentlySelectedReservationToCancel());
+                HashMap<String, Object> data = new HashMap<String, Object>();
+                data.put("booking_id", bookingID);
+                String guestsString = (String)JOptionPane.showInputDialog(null,
+                        "How many guests will be in reservation with booking ID " + bookingID + "?",
+                        "Enter new number of guests", JOptionPane.QUESTION_MESSAGE);
+                if(guestsString == null) {
+                    cp.setMessageLabel("Error: you need to specify the new number of guests if changing it!");
+                }
+                else {
+                    try {
+                        int numGuests = Integer.parseInt(guestsString);
+                        if(numGuests >= 0) {  // TODO need way to determine if user's number of guests is less than or equal to recommended room size
+                            data.put("guests", numGuests);
+                            if(model.updateReservation(data)) {
+                                loadCustomerCurrentReservations();
+                            }
+                            else {
+                                cp.setMessageLabel("Error: unable to change number of guests for selected reservation!");
+                            }
+                        }
+                        else {
+                            cp.setMessageLabel("Error: number of guests exceeds room size!");
+                        }
+                    }
+                    catch(Exception ex) {
+                        cp.setMessageLabel("Error: number of guests must be a number!");
+                        ex.printStackTrace();
+                    }
+                }
             }
         });
     }
@@ -524,5 +566,46 @@ public class HotelController {
         this.view.resetAllPanels();
         this.view.changeCard(HotelView.LOGIN_PANEL);
         this.model.signOut();
+    }
+
+    /**
+     * Loads current reservations for logged-in customer
+     * @return true if load worked, and false if not
+     */
+    private boolean loadCustomerCurrentReservations() {
+        CustomerPanel cp = this.view.getCustomerPanel();
+        ViewReservationsCustomerCard cpViewReservationsCard = cp.getViewReservationsCustomerCard();
+        try {
+            ResultSet customerReservations = model.viewReservation();
+            ArrayList<Object[]> reservationList = new ArrayList<Object[]>();
+            while(customerReservations.next()) {
+                int bookingID = customerReservations.getInt("booking_id");
+                String updatedAt = customerReservations.getString("updated_at");
+                String start_date = customerReservations.getString("start_date");
+                String end_date = customerReservations.getString("end_date");
+                int guests = customerReservations.getInt("guests");
+                int roomNumber = customerReservations.getInt("room_number");
+                int detailsId = customerReservations.getInt("details_id");
+                double price = customerReservations.getDouble("price");
+                String roomType = customerReservations.getString("room_type");
+                int floor = customerReservations.getInt("floor");
+                int capacity = customerReservations.getInt("capacity");
+                int beds = customerReservations.getInt("beds");
+                int bathrooms = customerReservations.getInt("bathrooms");
+                boolean hasWindows = customerReservations.getBoolean("has_windows");
+                boolean smokingAllowed = customerReservations.getBoolean("smoking_allowed");
+                Object[] reservationDetails = {bookingID, roomNumber, start_date, end_date,
+                        guests, "$" + price, roomType, floor, capacity, beds, bathrooms, hasWindows, smokingAllowed};
+                reservationList.add(reservationDetails);
+            }
+            Object[][] reservationArray = reservationList.toArray(new Object[reservationList.size()][ReservationListPanel.COLUMN_NAMES.length]);
+            cpViewReservationsCard.setCurrentReservationDetailsPane(reservationArray);
+            return true;
+        }
+        catch(Exception ex) {
+            cp.setMessageLabel("Error: unable to load reservation data");
+            ex.printStackTrace();
+            return false;
+        }
     }
 }

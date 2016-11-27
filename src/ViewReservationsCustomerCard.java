@@ -48,6 +48,14 @@ public class ViewReservationsCustomerCard extends JPanel {
     }
 
     /**
+     * Adds an action listener for the change num guests button
+     * @param listener action listener to listen on the change num guests button
+     */
+    public void addChangeNumGuestsButtonListener(ActionListener listener) {
+        this.currentReservations.addChangeNumGuestsButtonListener(listener);
+    }
+
+    /**
      * Sets currentReservations in the reservation list panel to match newDetails
      * @param newDetails current reservation data to display
      */

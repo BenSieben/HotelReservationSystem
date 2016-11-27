@@ -1,9 +1,6 @@
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Panel which holds a single reservation receipt (in
@@ -15,38 +12,40 @@ import java.util.List;
 public class ReservationListPanel extends JPanel {
 
     // Column names for the table in this panel
-    public static final String[] COLUMN_NAMES = {"Booking ID", "First Name", "Last Name", "Start Time", "End Time", "# Guests",
+    public static final String[] COLUMN_NAMES = {"Booking ID", "Room Number", "Start Time", "End Time", "# Guests",
             "Daily Cost", "Room Type", "Floor", "Capacity", "Beds", "Bathrooms", "Has Windows", "Smoking Allowed"};
 
-    // Whether or not reservations are cancellable (whether or not
-    //   cancel buttons will be drawn / get to have action listeners added)
-    private boolean reservationsAreCancellable;
+    // Whether or not reservations are modifiable (whether or not
+    //   modification buttons will be drawn / get to have action listeners added)
+    private boolean reservationsAreModifiable;
 
     // The table in this reservation list panel (and the scroll pane it is in)
     private JTable reservationDetails;
     private JScrollPane reservationDetailsPane;
 
     // The cancel button below the reservation table to cancel a reservation, and a combo box to pick a reservation to cancel
+    //   (also a button to change number of guests for selected reservation)
     private JButton cancelReservationButton;
+    private JButton changeNumGuestsButton;
     private JComboBox<String> cancelComboBox;
 
     /**
      * Constructs a new reservation list panel
-     * @param reservationsAreCancellable whether or not the listed reservations are cancellable
+     * @param reservationsAreModifiable whether or not the listed reservations are modifiable
      */
-    public ReservationListPanel(boolean reservationsAreCancellable) {
+    public ReservationListPanel(boolean reservationsAreModifiable) {
         setLayout(new BorderLayout());
         setOpaque(false);
 
-        this.reservationsAreCancellable = reservationsAreCancellable;
-        Object[][] sampleDetails = {{"ID", "FN", "LN", "ST", "ET", "#G", "$DC", "RT", "F", "C", "Be", "Ba", "HW", "SA"}};
+        this.reservationsAreModifiable = reservationsAreModifiable;
+        Object[][] sampleDetails = {{"ID", "RN", "ST", "ET", "#G", "$DC", "RT", "F", "C", "Be", "Ba", "HW", "SA"}};
         setReservationDetailsPane(sampleDetails);
     }
 
     /**
      * Changes the reservations listed in the table (also adjusts combo box to reflect
      * these new reservations)
-     * @param newDetails
+     * @param newDetails the new details to place in the table
      */
     public void setReservationDetailsPane(Object[][] newDetails) {
         // Make new JTable
@@ -66,7 +65,7 @@ public class ReservationListPanel extends JPanel {
         add(this.reservationDetailsPane, BorderLayout.CENTER);
 
         // Set up new combo box (if necessary)
-        if(reservationsAreCancellable) {
+        if(reservationsAreModifiable) {
             add(createCancelPanel(generateCancelSelectionsFromNewDetails(newDetails)), BorderLayout.SOUTH);
         }
 
@@ -93,17 +92,18 @@ public class ReservationListPanel extends JPanel {
     private String[] generateCancelSelectionsFromNewDetails(Object[][] newDetails) {
         String[] comboItems = new String[newDetails.length];
         for (int i = 0; i < newDetails.length; i++) {
-            String comboItemText = (String)newDetails[i][0];  // Grab first element from each inner array (the booking ID)
+            String comboItemText = String.valueOf(newDetails[i][0]);  // Grab first element from each inner array (the booking ID)
             comboItems[i] = comboItemText;
         }
         return comboItems;
     }
 
     /**
-     * Creates a new cancel panel which has a cancel button and combo box
-     * to pick a reservation to cancel
-     * @param cancelSelections array containing all cancel reservation options
-     * @return a JPanel containing necessary elements to cancel reservations
+     * Creates a new modification panel which has a cancel button and combo box
+     * to pick a reservation to cancel, as well as a change guests button to change
+     * number of guests for a given reservation
+     * @param cancelSelections array containing all modification reservation options
+     * @return a JPanel containing necessary elements to modify reservations
      */
     private JPanel createCancelPanel(String[] cancelSelections) {
         JPanel cancelPanel = new JPanel();
@@ -118,11 +118,15 @@ public class ReservationListPanel extends JPanel {
             this.cancelComboBox = new JComboBox<String>(cancelSelections);
         }
         if(this.cancelReservationButton == null) {
-            this.cancelReservationButton = new JButton("Cancel selected reservation (in combo box)");
+            this.cancelReservationButton = new JButton("Cancel reservation with selected booking ID (in combo box)");
+        }
+        if(this.changeNumGuestsButton == null) {
+            this.changeNumGuestsButton = new JButton("Change number of guests for selected booking ID (in combo box)");
         }
 
         cancelPanel.add(this.cancelComboBox);
         cancelPanel.add(this.cancelReservationButton);
+        cancelPanel.add(this.changeNumGuestsButton);
         return cancelPanel;
     }
 
@@ -137,9 +141,19 @@ public class ReservationListPanel extends JPanel {
     }
 
     /**
+     * Adds an action listener for the change num guests button
+     * @param listener action listener to listen on the change num guests button
+     */
+    public void addChangeNumGuestsButtonListener(ActionListener listener) {
+        if(this.changeNumGuestsButton != null) {
+            this.changeNumGuestsButton.addActionListener(listener);
+        }
+    }
+
+    /**
      * Returns the currently selected reservation to delete from the list
      * of reservations
-     * @return null if reservations are cancellable (no combo box exists in that
+     * @return null if reservations are not cancellable (no combo box exists in that
      * version), or else the currently selected string in the combo box selecting
      * the reservation to cancel
      */
