@@ -404,7 +404,7 @@ public class HotelController {
                 else {
                     try {
                         int numGuests = Integer.parseInt(guestsString);
-                        if(numGuests >= 0) {  // TODO need way to determine if user's number of guests is less than or equal to recommended room size
+                        if(numGuests >= 0 && numGuests + 1 <= model.getCapacityForBooking(bookingID)) {
                             data.put("guests", numGuests);
                             if(model.updateReservation(data)) {
                                 loadCustomerCurrentReservations();
@@ -414,7 +414,7 @@ public class HotelController {
                             }
                         }
                         else {
-                            cp.setMessageLabel("Error: number of guests exceeds room size!");
+                            cp.setMessageLabel("Error: number of guests exceeds room size (or is unrealistic number)!");
                         }
                     }
                     catch(Exception ex) {

@@ -327,6 +327,44 @@ public class HotelModel {
             return false;
         }
     }
+
+    /**
+     * Finds capacity for room with given booking ID
+     * @param bookingID booking ID to look up
+     * @return Integer.MAX_VALUE if booking_id is bad; or else gives back capacity of room matching the booking ID
+     */
+    public int getCapacityForBooking(int bookingID) {
+        try {
+            // Get room ID from booking ID
+            String query = "SELECT room_id FROM booking_room WHERE booking_id = ?";
+            this.preparedStatement = conn.prepareStatement(query);
+            this.preparedStatement.setObject(1, bookingID);
+            ResultSet roomIDResult = this.preparedStatement.executeQuery();
+            roomIDResult.next();
+            int roomID = roomIDResult.getInt("room_id");
+
+            // Get details ID from room ID
+            query = "SELECT details_id FROM room_details WHERE room_id = ?";
+            this.preparedStatement = conn.prepareStatement(query);
+            this.preparedStatement.setObject(1, roomID);
+            ResultSet detailsIDResult = this.preparedStatement.executeQuery();
+            detailsIDResult.next();
+            int detailsID = detailsIDResult.getInt("details_id");
+
+            // Get capacity from details ID
+            query = "SELECT capacity FROM details WHERE details_id = ?";
+            this.preparedStatement = conn.prepareStatement(query);
+            this.preparedStatement.setObject(1, detailsID);
+            ResultSet capacityResult = this.preparedStatement.executeQuery();
+            capacityResult.next();
+            return capacityResult.getInt("capacity");
+        }
+        catch(Exception ex) {
+            System.err.println("Unexpected error occurred while trying to find capacity for booking ID " + bookingID);
+            ex.printStackTrace();
+            return Integer.MIN_VALUE;
+        }
+    }
     
     /*
      * In case front-end system loses current user ID
