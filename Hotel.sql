@@ -36,6 +36,20 @@ FOR EACH ROW
 //
 delimiter ;
 
+-- Period trigger (check start date is not after the end date) --
+DROP TRIGGER IF EXISTS PeriodInsertTrigger;
+delimiter //
+CREATE TRIGGER PeriodInsertTrigger
+BEFORE INSERT ON Period
+FOR EACH ROW
+  BEGIN
+    IF NEW.start_date > NEW.end_date THEN -- If start date is after end date, default the start date to the end date
+      SET NEW.start_date = NEW.end_date;
+    END IF;
+  END;
+//
+delimiter ;
+
 -- Room relation --
 DROP TABLE IF EXISTS Room;
 CREATE TABLE Room
