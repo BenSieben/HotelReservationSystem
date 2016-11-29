@@ -63,6 +63,7 @@ public class ManagerPanel extends JPanel{
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         topPanel.setBackground(new Color(230, 204, 255));
         this.welcomeLabel = new JLabel();
+        this.welcomeLabel.setFont(new Font(null, Font.BOLD, 20));
         changeManagerName(managerName);  // Use helper method to set welcomeLabel text
         this.logoutButton = new JButton("Logout");
 
