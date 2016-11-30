@@ -81,7 +81,7 @@ public class HotelController {
         cp.addViewReservationsButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(loadCustomerCurrentReservations()) {
+                if(loadCustomerCurrentReservations() || loadCustomerArchiveReservations()) {
                     cp.goToViewReservationView();
                 }
             }
@@ -404,7 +404,7 @@ public class HotelController {
                 else {
                     try {
                         int numGuests = Integer.parseInt(guestsString);
-                        if(numGuests >= 0 && numGuests + 1 <= model.getCapacityForBooking(bookingID)) {
+                        if(numGuests >= 0) {  // TODO need way to determine if user's number of guests is less than or equal to recommended room size
                             data.put("guests", numGuests);
                             if(model.updateReservation(data)) {
                                 loadCustomerCurrentReservations();
@@ -414,7 +414,7 @@ public class HotelController {
                             }
                         }
                         else {
-                            cp.setMessageLabel("Error: number of guests exceeds room size (or is unrealistic number)!");
+                            cp.setMessageLabel("Error: number of guests exceeds room size!");
                         }
                     }
                     catch(Exception ex) {
@@ -608,4 +608,49 @@ public class HotelController {
             return false;
         }
     }
+
+    // TODO
+    /**
+     * Loads current reservations for logged-in customer
+     * @return true if load worked, and false if not
+     */
+    private boolean loadCustomerArchiveReservations() {
+        CustomerPanel cp = this.view.getCustomerPanel();
+        ViewReservationsCustomerCard cpViewReservationsCard = cp.getViewReservationsCustomerCard();
+        try {
+            ResultSet archiveReservations = model.viewArchivedReservation();
+            ArrayList<Object[]> archiveList = new ArrayList<Object[]>();
+            while(archiveReservations.next()) {
+                int bookingID = archiveReservations.getInt("booking_id");
+                String updatedAt = archiveReservations.getString("updated_at");
+                String start_date = archiveReservations.getString("start_date");
+                String end_date = archiveReservations.getString("end_date");
+                int guests = archiveReservations.getInt("guests");
+                int roomNumber = archiveReservations.getInt("room_number");
+                int detailsId = archiveReservations.getInt("details_id");
+                double price = archiveReservations.getDouble("price");
+                String roomType = archiveReservations.getString("room_type");
+                int floor = archiveReservations.getInt("floor");
+                int capacity = archiveReservations.getInt("capacity");
+                int beds = archiveReservations.getInt("beds");
+                int bathrooms = archiveReservations.getInt("bathrooms");
+                boolean hasWindows = archiveReservations.getBoolean("has_windows");
+                boolean smokingAllowed = archiveReservations.getBoolean("smoking_allowed");
+                Object[] reservationDetails = {bookingID, roomNumber, start_date, end_date,
+                        guests, "$" + price, roomType, floor, capacity, beds, bathrooms, hasWindows, smokingAllowed};
+                archiveList.add(reservationDetails);
+            }
+            Object[][] reservationArray = archiveList.toArray(new Object[archiveList.size()][ReservationListPanel.COLUMN_NAMES.length]);
+            cpViewReservationsCard.setArchivedReservationsDetailsPane(reservationArray);
+            return true;
+        }
+        catch(Exception ex) {
+            cp.setMessageLabel("Error: unable to load reservation data");
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
 }
+
+
