@@ -42,7 +42,7 @@ public class PaymentCustomerCard extends CustomerReservationCardPanel {
         // Create components to add to middle panel
         JPanel costPanel = new JPanel();
         costPanel.setOpaque(false);
-        JLabel totalCostLabel = new JLabel("Total Cost: ");
+        JLabel totalCostLabel = new JLabel("Total Cost ($): ");
         this.totalCost = new JLabel("Cost goes here!");
         costPanel.add(totalCostLabel);
         costPanel.add(this.totalCost);

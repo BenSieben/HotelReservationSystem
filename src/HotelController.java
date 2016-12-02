@@ -128,7 +128,7 @@ public class HotelController {
                             boolean hasWindows = availableRooms.getBoolean("has_windows");
                             boolean smokingAllowed = availableRooms.getBoolean("smoking_allowed");
                             final Object[][] availableRoomDetails = {{"Room ID", roomId},
-                                {"Room Number", roomNumber}, {"Daily Price", "$" + price}, {"Room Type", roomType},
+                                {"Room Number", roomNumber}, {"Daily Price ($)", price}, {"Room Type", roomType},
                                 {"Floor", floor}, {"Capacity", capacity}, {"Beds", beds}, {"Bathrooms", bathrooms},
                                 {"Has Windows", hasWindows}, {"Smoking Allowed", smokingAllowed}};
                             JButton currentRoomButton = new JButton("Room Number: " +
@@ -239,7 +239,7 @@ public class HotelController {
                     reserveRoomData.put("capacity", roomDetails.get("Capacity"));
                     // Also add other details (for the receipt)
                     reserveRoomData.put("room_number", roomDetails.get("Room Number"));
-                    reserveRoomData.put("daily_price", roomDetails.get("Daily Price"));
+                    reserveRoomData.put("daily_price", roomDetails.get("Daily Price ($)"));
                     reserveRoomData.put("room_type", roomDetails.get("Room Type"));
                     reserveRoomData.put("floor", roomDetails.get("Floor"));
                     reserveRoomData.put("beds", roomDetails.get("Beds"));
@@ -281,6 +281,10 @@ public class HotelController {
                         String[] paymentTypes = model.getAllPaymentTypes();
                         cpPaymentCard.setPaymentTypes(paymentTypes);
                         // TODO prepare payment card with total cost
+                        String totalCost = model.calculateReservationCost((String)reserveRoomData.get("start_date"),
+                                (String)reserveRoomData.get("end_date"),
+                                (double)reserveRoomData.get("daily_price"));
+                        cpPaymentCard.setTotalCost(totalCost);
                         cp.goToNextCard();
                     }
                     else {
@@ -290,6 +294,7 @@ public class HotelController {
                 }
                 catch(Exception ex) {
                     cp.setMessageLabel("Error: please enter an actual number of guests");
+                    ex.printStackTrace();
                 }
             }
         });
@@ -319,14 +324,14 @@ public class HotelController {
                     String selectedPaymentType = cpPaymentCard.getCurrentlySelectedPaymentType();
                     reserveRoomData.put("payment_type", selectedPaymentType);
                     String totalCostText = cpPaymentCard.getTotalCostText();
-                    double totalCost = Double.parseDouble(totalCostText.substring(1));  // Skip the $ sign at beginning of string
+                    double totalCost = Double.parseDouble(totalCostText);
                     reserveRoomData.put("amount", totalCost);
 
                     System.out.println(reserveRoomData);
                     Object[][] receiptData = {{"Start Date", reserveRoomData.get("start_date")},
                             {"End Date", reserveRoomData.get("end_date")}, {"Room ID", reserveRoomData.get("room_id")},
-                            {"Room Number", reserveRoomData.get("room_number")}, {"Daily Price", reserveRoomData.get("daily_price")},
-                            {"Total Price", reserveRoomData.get("amount")}, {"Payment Type", reserveRoomData.get("payment_type")},
+                            {"Room Number", reserveRoomData.get("room_number")}, {"Daily Price ($)", reserveRoomData.get("daily_price")},
+                            {"Total Price ($)", reserveRoomData.get("amount")}, {"Payment Type", reserveRoomData.get("payment_type")},
                             {"Room Type", reserveRoomData.get("room_type")}, {"Floor", reserveRoomData.get("floor")},
                             {"Capacity", reserveRoomData.get("capacity")}, {"Number of Guests", reserveRoomData.get("guests")},
                             {"Beds", reserveRoomData.get("beds")}, {"Bathrooms", reserveRoomData.get("bathrooms")},

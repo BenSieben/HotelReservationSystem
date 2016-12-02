@@ -430,4 +430,39 @@ public class HotelModel {
 		}
 	}
 
+    /**
+     * Returns a String of reservation cost for given startDate, endDate, and dailyCost
+     * @param startDate YYYY-MM-DD formatted String of start date
+     * @param endDate YYYY-MM-DD formatted String of end date
+     * @param dailyCost how much the reserved room costs per day
+     * @return String of total cost, or "ERROR" if an error occurred during calculation
+     */
+    public String calculateReservationCost(String startDate, String endDate, double dailyCost) {
+        try {
+            // Get difference of days between startDate and endDate
+            String query = "SELECT DATEDIFF(?, ?) AS days";
+            this.preparedStatement = conn.prepareStatement(query);
+            this.preparedStatement.setObject(1, endDate);
+            this.preparedStatement.setObject(2, startDate);
+            ResultSet roomIDResult = this.preparedStatement.executeQuery();
+            roomIDResult.next();
+            int reservationNumDays = roomIDResult.getInt("days");
+
+            // Use difference in days and multiply by daily cost to get final result
+            double totalPrice = dailyCost * reservationNumDays;
+            String totalPriceString = "" + totalPrice;
+            if(totalPriceString.indexOf(".") == totalPriceString.length() - 2) {  // only 1 decimal digit; append 0
+                return totalPriceString + "0";
+            }
+            else {  // two (or more) decimal digits; truncate off excess digits
+                return totalPriceString.substring(0, totalPriceString.indexOf(".") + 3);
+            }
+        }
+        catch(Exception ex) {
+            System.err.println("Unexpected error occurred while trying to compute total reservation cost");
+            ex.printStackTrace();
+            return "ERROR";
+        }
+    }
+
 }
