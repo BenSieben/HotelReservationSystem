@@ -81,8 +81,12 @@ public class HotelController {
         cp.addViewReservationsButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(loadCustomerCurrentReservations() || loadCustomerArchiveReservations()) {
+                // Upon pressing view reservations button, load up current and archived reservations
+                if(loadCustomerCurrentReservations() && loadCustomerArchiveReservations()) {
                     cp.goToViewReservationView();
+                }
+                else {
+                    cp.setMessageLabel("There was an error in retrieving your reservation information!");
                 }
             }
         });
