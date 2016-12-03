@@ -75,6 +75,7 @@ public class HotelModel {
 				return null;
 			}
 
+			// TODO filter out archived reservations
 			ResultSet result = null;
 			String sql = "SELECT t2.*, t4.start_date, t4.end_date, t5.guests, t6.room_number, t8.* "
 					+ "FROM booking_customer t1, booking t2, booking_period t3, period t4, booking_room t5, room t6, room_details t7, details t8 "
@@ -106,7 +107,6 @@ public class HotelModel {
 		}
 	}
 
-	// TODO
 	/*
 	 * This function should be called only when user is logged in Input: none,
 	 * user session already has customer_id Return: Booking time/changes, start
@@ -150,6 +150,91 @@ public class HotelModel {
 		}
 	}
 
+	/*
+	 * Views all current reservations of all customers. 
+	 * Input: none,user session already has customer_id 
+	 * Return: Booking time/changes, startdatetime, end datetime, guests #, room #, room details
+	 */
+	public ResultSet viewAllCurrentReservations() {
+		try {
+			// Cannot access unless logged in
+			if (userSession == null) {
+				return null;
+			}
+
+			// TODO filter out archived reservations
+			ResultSet result = null;
+			String sql = "SELECT t1.*, t3.start_date, t3.end_date, t4.guests, t5.room_number, t7.* "
+					+ "FROM booking t1, booking_period t2, period t3, booking_room t4, room t5, room_details t6, details t7 "
+					+ "WHERE t1.booking_id = t2.booking_id AND t2.period_id = t3.period_id "
+					+ "AND t4.booking_id = t1.booking_id AND t4.room_id = t5.room_id AND t5.room_id = t6.room_id AND t6.details_id = t7.details_id;";
+			this.preparedStatement = conn.prepareStatement(sql);
+			result = this.preparedStatement.executeQuery();
+
+			ResultSetMetaData rsmd = result.getMetaData();// for debugging
+			int columnsNumber = rsmd.getColumnCount(); // for debugging
+
+			// for debugging
+			while (result.next()) {
+				for (int i = 1; i <= columnsNumber; i++) {
+					if (i > 1)
+						System.out.print(",  ");
+					String columnValue = result.getString(i);
+					System.out.print(columnValue + " " + rsmd.getColumnName(i));
+				}
+				System.out.println("");
+			}
+
+			result.beforeFirst();// move cursor back to beginning
+			return result;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
+	/*
+	 * Views all archived reservations of all customers. 
+	 * Input: none,user session already has customer_id 
+	 * Return: Booking time/changes, startdatetime, end datetime, guests #, room #, room details
+	 */
+	public ResultSet viewAllArchivedReservations() {
+		try {
+			// Cannot access unless logged in
+			if (userSession == null) {
+				return null;
+			}
+
+			ResultSet result = null;
+			String sql = "SELECT t1.*, t3.start_date, t3.end_date, t4.guests, t5.room_number, t7.* "
+					+ "FROM booking t1, booking_period t2, period t3, booking_room t4, room t5, room_details t6, details t7, booking_archive t8, archive t9 "
+					+ "WHERE t8.booking_id = t2.booking_id AND t9.archive_id = t8.archive_id AND t1.booking_id = t2.booking_id AND t2.period_id = t3.period_id "
+					+ "AND t4.booking_id = t1.booking_id AND t4.room_id = t5.room_id AND t5.room_id = t6.room_id AND t6.details_id = t7.details_id;";
+			this.preparedStatement = conn.prepareStatement(sql);
+			result = this.preparedStatement.executeQuery();
+
+			ResultSetMetaData rsmd = result.getMetaData();// for debugging
+			int columnsNumber = rsmd.getColumnCount(); // for debugging
+
+			// for debugging
+			while (result.next()) {
+				for (int i = 1; i <= columnsNumber; i++) {
+					if (i > 1)
+						System.out.print(",  ");
+					String columnValue = result.getString(i);
+					System.out.print(columnValue + " " + rsmd.getColumnName(i));
+				}
+				System.out.println("");
+			}
+
+			result.beforeFirst();// move cursor back to beginning
+			return result;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
 	/*
 	 * After user enter desired date, this function shall display the available
 	 * rooms. Input: start and end date in HashMap data type, using 'YYYY-MM-DD'

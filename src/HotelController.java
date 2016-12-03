@@ -82,7 +82,7 @@ public class HotelController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Upon pressing view reservations button, load up current and archived reservations
-                if(loadCustomerCurrentReservations() && loadCustomerArchiveReservations()) {
+                if(loadCustomerCurrentReservations() && loadCustomerArchivedReservations()) {
                     cp.goToViewReservationView();
                 }
                 else {
@@ -450,14 +450,16 @@ public class HotelController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO set up and go to view current reservations view in manager panel
-                mp.changeCard(ManagerPanel.CURRENT_RESERVATIONS_PANEL);
+            	loadAllCurrentReservations();
+            	mp.changeCard(ManagerPanel.CURRENT_RESERVATIONS_PANEL);
             }
         });
         mp.addViewArchivedReservationsPanelButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO set up and go to view archived reservations view in manager panel
-                mp.changeCard(ManagerPanel.ARCHIVED_RESERVATIONS_PANEL);
+                loadAllArchivedReservations();
+            	mp.changeCard(ManagerPanel.ARCHIVED_RESERVATIONS_PANEL);
             }
         });
         mp.addViewRevenuePanelButtonListener(new ActionListener() {
@@ -522,6 +524,8 @@ public class HotelController {
                         this.view.changeManagerName(usersName);
                         this.view.changeCard(HotelView.MANAGER_PANEL);
                         // TODO also update the view current reservations / archived reservations in the manager panel
+                        loadAllCurrentReservations();
+                        loadAllArchivedReservations();
                     }
                     else { // Regular customers will have any other id
                         this.view.changeCustomerName(usersName);
@@ -618,12 +622,11 @@ public class HotelController {
         }
     }
 
-    // TODO
     /**
      * Loads current reservations for logged-in customer
      * @return true if load worked, and false if not
      */
-    private boolean loadCustomerArchiveReservations() {
+    private boolean loadCustomerArchivedReservations() {
         CustomerPanel cp = this.view.getCustomerPanel();
         ViewReservationsCustomerCard cpViewReservationsCard = cp.getViewReservationsCustomerCard();
         try {
@@ -655,6 +658,88 @@ public class HotelController {
         }
         catch(Exception ex) {
             cp.setMessageLabel("Error: unable to load reservation data");
+            ex.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * Loads all current reservations for manager
+     * @return true if load worked, and false if not
+     */
+    private boolean loadAllCurrentReservations() {
+        ManagerPanel mp = view.getManagerPanel();
+        ViewCurrentReservationsManagerCard currentReservationsPanel = mp.getViewCurrentReservationsManagerCard();
+        try {
+            ResultSet customerReservations = model.viewAllCurrentReservations();
+            ArrayList<Object[]> reservationList = new ArrayList<Object[]>();
+            while(customerReservations.next()) {
+                int bookingID = customerReservations.getInt("booking_id");
+                String updatedAt = customerReservations.getString("updated_at");
+                String start_date = customerReservations.getString("start_date");
+                String end_date = customerReservations.getString("end_date");
+                int guests = customerReservations.getInt("guests");
+                int roomNumber = customerReservations.getInt("room_number");
+                int detailsId = customerReservations.getInt("details_id");
+                double price = customerReservations.getDouble("price");
+                String roomType = customerReservations.getString("room_type");
+                int floor = customerReservations.getInt("floor");
+                int capacity = customerReservations.getInt("capacity");
+                int beds = customerReservations.getInt("beds");
+                int bathrooms = customerReservations.getInt("bathrooms");
+                boolean hasWindows = customerReservations.getBoolean("has_windows");
+                boolean smokingAllowed = customerReservations.getBoolean("smoking_allowed");
+                Object[] reservationDetails = {bookingID, roomNumber, start_date, end_date,
+                        guests, "$" + price, roomType, floor, capacity, beds, bathrooms, hasWindows, smokingAllowed};
+                reservationList.add(reservationDetails);
+            }
+            Object[][] reservationArray = reservationList.toArray(new Object[reservationList.size()][ReservationListPanel.COLUMN_NAMES.length]);
+            currentReservationsPanel.setReservationDetailsPane(reservationArray);
+            return true;
+        }
+        catch(Exception ex) {
+            mp.setMessageLabel("Error: unable to load reservation data");
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Loads all reservations for manager
+     * @return true if load worked, and false if not
+     */
+    private boolean loadAllArchivedReservations() {
+    	ManagerPanel mp = view.getManagerPanel();
+        ViewArchivedReservationsManagerCard archivedReservationsPanel = mp.getViewArchivedReservationsManagerCard();
+        try {
+            ResultSet archiveReservations = model.viewAllArchivedReservations();
+            ArrayList<Object[]> archiveList = new ArrayList<Object[]>();
+            while(archiveReservations.next()) {
+                int bookingID = archiveReservations.getInt("booking_id");
+                String updatedAt = archiveReservations.getString("updated_at");
+                String start_date = archiveReservations.getString("start_date");
+                String end_date = archiveReservations.getString("end_date");
+                int guests = archiveReservations.getInt("guests");
+                int roomNumber = archiveReservations.getInt("room_number");
+                int detailsId = archiveReservations.getInt("details_id");
+                double price = archiveReservations.getDouble("price");
+                String roomType = archiveReservations.getString("room_type");
+                int floor = archiveReservations.getInt("floor");
+                int capacity = archiveReservations.getInt("capacity");
+                int beds = archiveReservations.getInt("beds");
+                int bathrooms = archiveReservations.getInt("bathrooms");
+                boolean hasWindows = archiveReservations.getBoolean("has_windows");
+                boolean smokingAllowed = archiveReservations.getBoolean("smoking_allowed");
+                Object[] reservationDetails = {bookingID, roomNumber, start_date, end_date,
+                        guests, "$" + price, roomType, floor, capacity, beds, bathrooms, hasWindows, smokingAllowed};
+                archiveList.add(reservationDetails);
+            }
+            Object[][] reservationArray = archiveList.toArray(new Object[archiveList.size()][ReservationListPanel.COLUMN_NAMES.length]);
+            archivedReservationsPanel.setReservationDetailsPane(reservationArray);
+            return true;
+        }
+        catch(Exception ex) {
+            mp.setMessageLabel("Error: unable to load reservation data");
             ex.printStackTrace();
             return false;
         }
