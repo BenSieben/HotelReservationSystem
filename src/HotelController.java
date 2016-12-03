@@ -11,7 +11,9 @@ public class HotelController {
 
 	private HotelModel model;
 	private HotelView view;
-	private HashMap<String, Object> reserveRoomData; // Holds needed details to reserve a room (as a customer)
+	private HashMap<String, Object> reserveRoomData; // Holds needed details to
+														// reserve a room (as a
+														// customer)
 
 	public HotelController(HotelModel model, HotelView view) {
 		this.model = model;
@@ -632,9 +634,9 @@ public class HotelController {
 		try {
 			ResultSet customerReservations = model.viewReservation();
 			
-			// TODO finish implementing methods
-			updateArchive(customerReservations);
-			ResultSet currentCustomerReservations = getCurrentReservationsOnly(customerReservations);
+//			// TODO finish implementing methods
+//			updateArchive(customerReservations);
+//			ResultSet currentCustomerReservations = getCurrentReservationsOnly(customerReservations);
 			
 			// TODO change to currentCustomerReservations when method is implemented
 			Object[][] reservationArray = getReservations(customerReservations);
@@ -678,9 +680,9 @@ public class HotelController {
 		try {
 			ResultSet customerReservations = model.viewAllCurrentReservations();
 			
-			// TODO finish implementing methods
-			updateArchive(customerReservations);
-			ResultSet currentCustomerReservations = getCurrentReservationsOnly(customerReservations);
+//			// TODO finish implementing methods
+//			updateArchive(customerReservations);
+//			ResultSet currentCustomerReservations = getCurrentReservationsOnly(customerReservations);
 			
 			// TODO change to currentCustomerReservations when method is implemented
 			Object[][] reservationArray = getReservations(customerReservations);
