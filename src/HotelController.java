@@ -310,7 +310,7 @@ public class HotelController {
 						cpPaymentCard.setPaymentTypes(paymentTypes);
 						// TODO prepare payment card with total cost
 						String totalCost = model.calculateReservationCost((String) reserveRoomData.get("start_date"),
-								(String) reserveRoomData.get("end_date"), (double) reserveRoomData.get("daily_price"));
+								(String) reserveRoomData.get("end_date"), (Double) reserveRoomData.get("daily_price"));
 						cpPaymentCard.setTotalCost(totalCost);
 						cp.goToNextCard();
 					} else {
