@@ -518,10 +518,23 @@ public class HotelController {
 		mpViewCurrentReservationCard.addCancelReservationButtonListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO delete selected reservation, then reload new list of
-				// reservations back into the current reservation list panel
-				System.err.println("Deleting reservation "
-						+ mpViewCurrentReservationCard.getCurrentlySelectedReservationToCancel());
+				try {
+					// TODO delete selected reservation, then reload new list of
+					// reservations back into the reservation list panel
+					System.err.println("Deleting reservation "
+							+ mpViewCurrentReservationCard.getCurrentlySelectedReservationToCancel());
+					int bookingID = Integer.parseInt(mpViewCurrentReservationCard.getCurrentlySelectedReservationToCancel());
+					HashMap<String, Object> data = new HashMap<String, Object>();
+					data.put("booking_id", bookingID);
+					if (model.deleteReservation(data)) {
+						loadAllCurrentReservations(); // Reload all current customer reservations on successful delete
+					} else {
+						mp.setMessageLabel("Error: unable to delete selected booking!");
+					}
+				} catch (Exception ex) {
+					mp.setMessageLabel("Error: booking ID is not correct format (integer)!");
+					ex.printStackTrace();
+				}
 			}
 		});
 	}
@@ -633,12 +646,6 @@ public class HotelController {
 		ViewReservationsCustomerCard cpViewReservationsCard = cp.getViewReservationsCustomerCard();
 		try {
 			ResultSet customerReservations = model.viewReservation();
-			
-//			// TODO finish implementing methods
-//			updateArchive(customerReservations);
-//			ResultSet currentCustomerReservations = getCurrentReservationsOnly(customerReservations);
-			
-			// TODO change to currentCustomerReservations when method is implemented
 			Object[][] reservationArray = getReservations(customerReservations);
 			cpViewReservationsCard.setCurrentReservationDetailsPane(reservationArray);
 			return true;
@@ -679,12 +686,6 @@ public class HotelController {
 		ViewCurrentReservationsManagerCard currentReservationsPanel = mp.getViewCurrentReservationsManagerCard();
 		try {
 			ResultSet customerReservations = model.viewAllCurrentReservations();
-			
-//			// TODO finish implementing methods
-//			updateArchive(customerReservations);
-//			ResultSet currentCustomerReservations = getCurrentReservationsOnly(customerReservations);
-			
-			// TODO change to currentCustomerReservations when method is implemented
 			Object[][] reservationArray = getReservations(customerReservations);
 			currentReservationsPanel.setReservationDetailsPane(reservationArray);
 			return true;
@@ -751,40 +752,4 @@ public class HotelController {
 		return reservationArray;
 	}
 
-	/**
-	 * Updates Booking_Archive with reservations that have expired in Booking
-	 * 
-	 * @param rs the ResultSet of reservations
-	 * @throws SQLException for iterating through the ResultSet
-	 */
-	private static void updateArchive(ResultSet rs) throws SQLException {
-		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-		while (rs.next()) {
-			Timestamp reservationTime = rs.getTimestamp("end_date");
-			
-			// If the date of the reservation is past the current date
-			if (currentTime.compareTo(reservationTime) > 0)
-			{
-				int bookingID = rs.getInt("booking_id");
-				// TODO
-				// If the booking_id does not already exist in Booking_Archive
-					
-					// Insert into Booking_Archive table
-			}
-		}
-	}
-
-	/**
-	 * Gets the current reservations that are not in Booking_Archive
-	 * 
-	 * @return the current reservations without the archived reservations
-	 */
-	private ResultSet getCurrentReservationsOnly(ResultSet rs) {		
-		
-		// Find Booking - Booking_Archive 
-		// SELECT tuples with booking_id's from Booking that are NOT in Booking_Archive
-		
-		// Placeholder
-		return rs;
-	}
 }
