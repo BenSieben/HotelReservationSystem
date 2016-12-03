@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -629,6 +631,12 @@ public class HotelController {
 		ViewReservationsCustomerCard cpViewReservationsCard = cp.getViewReservationsCustomerCard();
 		try {
 			ResultSet customerReservations = model.viewReservation();
+			
+			// TODO finish implementing methods
+			updateArchive(customerReservations);
+			ResultSet currentCustomerReservations = getCurrentReservationsOnly(customerReservations);
+			
+			// TODO change to currentCustomerReservations when method is implemented
 			Object[][] reservationArray = getReservations(customerReservations);
 			cpViewReservationsCard.setCurrentReservationDetailsPane(reservationArray);
 			return true;
@@ -669,6 +677,12 @@ public class HotelController {
 		ViewCurrentReservationsManagerCard currentReservationsPanel = mp.getViewCurrentReservationsManagerCard();
 		try {
 			ResultSet customerReservations = model.viewAllCurrentReservations();
+			
+			// TODO finish implementing methods
+			updateArchive(customerReservations);
+			ResultSet currentCustomerReservations = getCurrentReservationsOnly(customerReservations);
+			
+			// TODO change to currentCustomerReservations when method is implemented
 			Object[][] reservationArray = getReservations(customerReservations);
 			currentReservationsPanel.setReservationDetailsPane(reservationArray);
 			return true;
@@ -701,11 +715,14 @@ public class HotelController {
 
 	/**
 	 * Gets a 2D Array of reservations using data from a given ResultSet
-	 * @param rs the ResultSet of reservations
+	 * 
+	 * @param rs
+	 *            the ResultSet of reservations
 	 * @return a 2D Array of reservations
-	 * @throws Exception a SQLException
+	 * @throws SQLException
+	 *             for iterating through the ResultSet
 	 */
-	private static Object[][] getReservations(ResultSet rs) throws Exception {
+	private static Object[][] getReservations(ResultSet rs) throws SQLException {
 		ArrayList<Object[]> reservationList = new ArrayList<Object[]>();
 		while (rs.next()) {
 			int bookingID = rs.getInt("booking_id");
@@ -731,5 +748,41 @@ public class HotelController {
 				.toArray(new Object[reservationList.size()][ReservationListPanel.COLUMN_NAMES.length]);
 		return reservationArray;
 	}
-	
+
+	/**
+	 * Updates Booking_Archive with reservations that have expired in Booking
+	 * 
+	 * @param rs the ResultSet of reservations
+	 * @throws SQLException for iterating through the ResultSet
+	 */
+	private static void updateArchive(ResultSet rs) throws SQLException {
+		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+		while (rs.next()) {
+			Timestamp reservationTime = rs.getTimestamp("end_date");
+			
+			// If the date of the reservation is past the current date
+			if (currentTime.compareTo(reservationTime) > 0)
+			{
+				int bookingID = rs.getInt("booking_id");
+				// TODO
+				// If the booking_id does not already exist in Booking_Archive
+					
+					// Insert into Booking_Archive table
+			}
+		}
+	}
+
+	/**
+	 * Gets the current reservations that are not in Booking_Archive
+	 * 
+	 * @return the current reservations without the archived reservations
+	 */
+	private ResultSet getCurrentReservationsOnly(ResultSet rs) {		
+		
+		// Find Booking - Booking_Archive 
+		// SELECT tuples with booking_id's from Booking that are NOT in Booking_Archive
+		
+		// Placeholder
+		return rs;
+	}
 }
