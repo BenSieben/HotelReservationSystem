@@ -99,8 +99,8 @@ public class CustomerPanel extends JPanel {
         this.paymentCustomerCard = new PaymentCustomerCard();
         this.confirmReservationCustomerCard = new ConfirmReservationCustomerCard();
         this.viewReservationsCustomerCard = new ViewReservationsCustomerCard(
-                new ReservationListPanel(true),
-                new ReservationListPanel(false));
+                new ReservationListPanel(true, true),
+                new ReservationListPanel(false, false));
 
         this.customerCards.add(this.pickReservationDateCustomerCard, CustomerPanel.PICK_DATE_PANEL);
         this.customerCards.add(this.pickRoomCustomerCard, CustomerPanel.PICK_ROOM_PANEL);

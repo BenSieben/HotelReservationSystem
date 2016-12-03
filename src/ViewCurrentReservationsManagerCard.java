@@ -13,7 +13,7 @@ public class ViewCurrentReservationsManagerCard extends JPanel {
     public ViewCurrentReservationsManagerCard() {
         setLayout(new GridLayout(0, 1));  // 1 component per row
         setOpaque(false);
-        this.currentReservationsList = new ReservationListPanel(true);
+        this.currentReservationsList = new ReservationListPanel(true, false);
         add(this.currentReservationsList);
         TitledBorder newBorder = new TitledBorder("View / cancel current reservations");
         newBorder.setTitleFont(new Font(null, Font.BOLD, 16));

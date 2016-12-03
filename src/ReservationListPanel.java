@@ -17,7 +17,8 @@ public class ReservationListPanel extends JPanel {
 
     // Whether or not reservations are modifiable (whether or not
     //   modification buttons will be drawn / get to have action listeners added)
-    private boolean reservationsAreModifiable;
+    private boolean reservationsAreCancellable;
+    private boolean reservationsCanChangeNumGuests;
 
     // The table in this reservation list panel (and the scroll pane it is in)
     private JTable reservationDetails;
@@ -31,13 +32,15 @@ public class ReservationListPanel extends JPanel {
 
     /**
      * Constructs a new reservation list panel
-     * @param reservationsAreModifiable whether or not the listed reservations are modifiable
+     * @param reservationsAreCancellable whether or not the listed reservations are cancellable
+     * @param reservationsCanChangeNumGuests whether or not there should be a button to change the number of guests
      */
-    public ReservationListPanel(boolean reservationsAreModifiable) {
+    public ReservationListPanel(boolean reservationsAreCancellable, boolean reservationsCanChangeNumGuests) {
         setLayout(new BorderLayout());
         setOpaque(false);
 
-        this.reservationsAreModifiable = reservationsAreModifiable;
+        this.reservationsAreCancellable = reservationsAreCancellable;
+        this.reservationsCanChangeNumGuests = reservationsCanChangeNumGuests;
         Object[][] sampleDetails = {{"ID", "RN", "ST", "ET", "#G", "$DC", "RT", "F", "C", "Be", "Ba", "HW", "SA"}};
         setReservationDetailsPane(sampleDetails);
     }
@@ -65,7 +68,7 @@ public class ReservationListPanel extends JPanel {
         add(this.reservationDetailsPane, BorderLayout.CENTER);
 
         // Set up new combo box (if necessary)
-        if(reservationsAreModifiable) {
+        if(reservationsAreCancellable || reservationsCanChangeNumGuests) {
             add(createCancelPanel(generateCancelSelectionsFromNewDetails(newDetails)), BorderLayout.SOUTH);
         }
 
@@ -117,16 +120,20 @@ public class ReservationListPanel extends JPanel {
         else {
             this.cancelComboBox = new JComboBox<String>(cancelSelections);
         }
-        if(this.cancelReservationButton == null) {
+        if(this.cancelReservationButton == null && reservationsAreCancellable) {
             this.cancelReservationButton = new JButton("Cancel reservation with selected booking ID (in combo box)");
         }
-        if(this.changeNumGuestsButton == null) {
+        if(this.changeNumGuestsButton == null && reservationsCanChangeNumGuests) {
             this.changeNumGuestsButton = new JButton("Change number of guests for selected booking ID (in combo box)");
         }
 
         cancelPanel.add(this.cancelComboBox);
-        cancelPanel.add(this.cancelReservationButton);
-        cancelPanel.add(this.changeNumGuestsButton);
+        if(this.cancelReservationButton != null) {
+            cancelPanel.add(this.cancelReservationButton);
+        }
+        if(this.changeNumGuestsButton != null) {
+            cancelPanel.add(this.changeNumGuestsButton);
+        }
         return cancelPanel;
     }
 

@@ -12,7 +12,7 @@ public class ViewArchivedReservationsManagerCard extends JPanel {
     public ViewArchivedReservationsManagerCard() {
         setLayout(new GridLayout(0, 1));  // 1 component per row
         setOpaque(false);
-        this.archivedReservationsList = new ReservationListPanel(false);
+        this.archivedReservationsList = new ReservationListPanel(false, false);
         add(this.archivedReservationsList);
         TitledBorder newBorder = new TitledBorder("View reservation archive");
         newBorder.setTitleFont(new Font(null, Font.BOLD, 16));
