@@ -552,7 +552,7 @@ public class HotelModel {
     
     /**
      * Get a list of customers with more than 2 bookings and sort them by booking count.
-     * @param None
+     * (No parameters)
      * @return customer_id, first_name, last_name, booking_count
      */
     public ResultSet rankCustomersBooking() {
@@ -561,7 +561,7 @@ public class HotelModel {
 			String sql = "SELECT t1.customer_id, t1.first_name, t1.last_name, COUNT(DISTINCT t2.booking_id) AS booking_count "
 					+ "FROM customer t1 "
 					+ "LEFT OUTER JOIN booking_customer t2 ON t2.customer_id = t1.customer_id "
-					+ "GROUP BY t1.customer_id HAVING COUNT(DISTINCT t2.booking_id) > 1 "
+					+ "GROUP BY t1.customer_id HAVING COUNT(DISTINCT t2.booking_id) >= 1 "
 					+ "ORDER BY booking_count DESC;";
 
 			this.preparedStatement = conn.prepareStatement(sql);

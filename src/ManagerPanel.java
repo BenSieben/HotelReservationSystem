@@ -26,6 +26,7 @@ public class ManagerPanel extends JPanel{
     private JButton viewCurrentReservationsPanelButton;
     private JButton viewArchivedReservationsPanelButton;
     private JButton viewRevenuePanelButton;
+    private JButton customerRankingPanelButton;
 
     // The middle panel itself
     private JPanel managerCards;
@@ -34,11 +35,13 @@ public class ManagerPanel extends JPanel{
     private ViewCurrentReservationsManagerCard viewCurrentReservationsManagerCard;
     private ViewArchivedReservationsManagerCard viewArchivedReservationsManagerCard;
     private ViewRevenueManagerCard viewRevenueManagerCard;
+    private CustomerRankingManagerCard customerRankingManagerCard;
 
     // Constants for identifying the different cards in managerCards
     public static final String CURRENT_RESERVATIONS_PANEL = "Reservations";
     public static final String ARCHIVED_RESERVATIONS_PANEL = "Archives";
     public static final String REVENUE_PANEL = "Revenue";
+    public static final String CUSTOMER_RANKINGS_PANEL = "Customer Rankings";
 
     /**
      * Creates a new ManagerPanel with default name
@@ -81,9 +84,11 @@ public class ManagerPanel extends JPanel{
         this.viewCurrentReservationsPanelButton = new JButton("View current reservations");
         this.viewArchivedReservationsPanelButton = new JButton("View archived reservations");
         this.viewRevenuePanelButton = new JButton("View revenue");
+        this.customerRankingPanelButton = new JButton("View customer rankings");
         middleTopPanel.add(this.viewCurrentReservationsPanelButton);
         middleTopPanel.add(this.viewArchivedReservationsPanelButton);
         middleTopPanel.add(this.viewRevenuePanelButton);
+        middleTopPanel.add(this.customerRankingPanelButton);
 
         this.managerCards = new JPanel();
         this.managerCards.setLayout(new CardLayout());  // Flip through various actions hotel manager can perform
@@ -92,10 +97,12 @@ public class ManagerPanel extends JPanel{
         this.viewCurrentReservationsManagerCard = new ViewCurrentReservationsManagerCard();
         this.viewArchivedReservationsManagerCard = new ViewArchivedReservationsManagerCard();
         this.viewRevenueManagerCard = new ViewRevenueManagerCard();
+        this.customerRankingManagerCard = new CustomerRankingManagerCard();
 
         this.managerCards.add(this.viewCurrentReservationsManagerCard, ManagerPanel.CURRENT_RESERVATIONS_PANEL);
         this.managerCards.add(this.viewArchivedReservationsManagerCard, ManagerPanel.ARCHIVED_RESERVATIONS_PANEL);
         this.managerCards.add(this.viewRevenueManagerCard, ManagerPanel.REVENUE_PANEL);
+        this.managerCards.add(this.customerRankingManagerCard, ManagerPanel.CUSTOMER_RANKINGS_PANEL);
 
         middlePanel.add(middleTopPanel, BorderLayout.NORTH);
         middlePanel.add(this.managerCards, BorderLayout.CENTER);
@@ -181,6 +188,14 @@ public class ManagerPanel extends JPanel{
     }
 
     /**
+     * Adds a new action listener to listen for the customer ranking button
+     * @param listener new action listener to add to customer ranking button
+     */
+    public void addCustomerRankingPanelButtonListener(ActionListener listener) {
+        this.customerRankingPanelButton.addActionListener(listener);
+    }
+
+    /**
      * Changes the manager panel's currently shown JPanel to be
      * the JPanel associated with the argument string,
      * newCard (does nothing if newCard is invalid)
@@ -191,7 +206,8 @@ public class ManagerPanel extends JPanel{
         CardLayout cl = (CardLayout)(this.managerCards.getLayout());
         if(CURRENT_RESERVATIONS_PANEL.equals(newCard)
                 || ARCHIVED_RESERVATIONS_PANEL.equals(newCard)
-                || REVENUE_PANEL.equals(newCard)) {
+                || REVENUE_PANEL.equals(newCard)
+                || CUSTOMER_RANKINGS_PANEL.equals(newCard)) {
             cl.show(this.managerCards, newCard);
         }
         else {
@@ -222,5 +238,13 @@ public class ManagerPanel extends JPanel{
      */
     public ViewRevenueManagerCard getViewRevenueManagerCard() {
         return this.viewRevenueManagerCard;
+    }
+
+    /**
+     * Returns the customer ranking card in this manager panel
+     * @return the customer ranking card in this manager panel
+     */
+    public CustomerRankingManagerCard getCustomerRankingManagerCard() {
+        return this.customerRankingManagerCard;
     }
 }

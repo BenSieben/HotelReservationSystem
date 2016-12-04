@@ -505,6 +505,33 @@ public class HotelController {
 				mp.changeCard(ManagerPanel.REVENUE_PANEL);
 			}
 		});
+		mp.addCustomerRankingPanelButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+				// TODO set up ranking panel
+				try {
+					ResultSet rankingsResults = model.rankCustomersBooking();
+					ArrayList<Object[]> reservationList = new ArrayList<Object[]>();
+					int rank = 1;  // This adds a "rank" column to each ranking (1 = best customer)
+					while (rankingsResults.next()) {
+						int customerID = rankingsResults.getInt("customer_id");
+						String firstName = rankingsResults.getString("first_name");
+						String lastName = rankingsResults.getString("last_name");
+						int bookingCount = rankingsResults.getInt("booking_count");
+						Object[] ranking = { customerID, firstName, lastName, bookingCount, rank++ };
+						reservationList.add(ranking);
+					}
+					Object[][] rankingData = reservationList
+							.toArray(new Object[reservationList.size()][ReservationListPanel.COLUMN_NAMES.length]);
+					mp.getCustomerRankingManagerCard().setRankingsPane(rankingData);
+					mp.changeCard(ManagerPanel.CUSTOMER_RANKINGS_PANEL);
+				}
+				catch(Exception ex) {
+					mp.setMessageLabel("Error: unable to load rankings view!");
+					ex.printStackTrace();
+				}
+            }
+        });
 	}
 
 	/**
