@@ -120,7 +120,7 @@ public class HotelModel {
 			String sql = "SELECT t2.*, t4.start_date, t4.end_date, t5.guests, t6.room_number, t8.* "
 					+ "FROM booking_customer t1, booking t2, booking_period t3, period t4, booking_room t5, room t6, room_details t7, details t8, booking_archive t9, archive t10 "
 					+ "WHERE ? = t1.customer_id AND t9.booking_id = t2.booking_id AND t10.archive_id = t9.archive_id AND t1.booking_id = t2.booking_id AND t2.booking_id = t3.booking_id AND t3.period_id = t4.period_id "
-					+ "AND t5.booking_id = t2.booking_id AND t5.room_id = t6.room_id AND t6.room_id = t7.room_id AND t7.details_id = t8.details_id ";
+					+ "AND t5.booking_id = t2.booking_id AND t5.room_id = t6.room_id AND t6.room_id = t7.room_id AND t7.details_id = t8.details_id;";
 			this.preparedStatement = conn.prepareStatement(sql);
 			this.preparedStatement.setObject(1, userSession.get("customer_id"));
 			result = this.preparedStatement.executeQuery();
