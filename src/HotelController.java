@@ -151,7 +151,8 @@ public class HotelController {
 						cpRoomCard.setRoomListPane(roomButtonsList);
 						cp.goToNextCard();
 					} catch (Exception ex) {
-						System.err.println(ex.toString());
+						cp.setMessageLabel("Error: unable to process loading of available rooms!");
+						ex.printStackTrace();
 					}
 				} else {
 					cp.setMessageLabel("Error: invalid date field(s) detected. "
@@ -308,7 +309,7 @@ public class HotelController {
 						reserveRoomData.put("guests", numGuests);
 						String[] paymentTypes = model.getAllPaymentTypes();
 						cpPaymentCard.setPaymentTypes(paymentTypes);
-						// TODO prepare payment card with total cost
+						// prepare payment card with total cost
 						String totalCost = model.calculateReservationCost((String) reserveRoomData.get("start_date"),
 								(String) reserveRoomData.get("end_date"), (Double) reserveRoomData.get("daily_price"));
 						cpPaymentCard.setTotalCost(totalCost);
@@ -342,7 +343,7 @@ public class HotelController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					// TODO prepare receipt card (if not already done in other
+					// prepare receipt card (if not already done in other
 					// listeners)
 					// From the payment card, once they hit next we can
 					// determine their chosen payment type
@@ -395,8 +396,6 @@ public class HotelController {
 		cpReceiptCard.addNextButtonListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO make sure reserving the room works (once it is ready for
-				// testing)
 				model.reserveRoom(reserveRoomData);
 				cp.resetAllFields();
 				cp.goToMakeNewReservationView();
@@ -415,7 +414,7 @@ public class HotelController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					// TODO delete selected reservation, then reload new list of
+					// delete selected reservation, then reload new list of
 					// reservations back into the reservation list panel
 					int bookingID = Integer.parseInt(cpViewReservationCard.getCurrentlySelectedReservationToCancel());
 					HashMap<String, Object> data = new HashMap<String, Object>();
@@ -436,8 +435,7 @@ public class HotelController {
 		cpViewReservationCard.addChangeNumGuestsButtonListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO let user specify new number of guests to put in selected
-				// room
+				// let user specify new number of guests to put in selected room
 				int bookingID = Integer.parseInt(cpViewReservationCard.getCurrentlySelectedReservationToCancel());
 				HashMap<String, Object> data = new HashMap<String, Object>();
 				data.put("booking_id", bookingID);
@@ -483,8 +481,7 @@ public class HotelController {
 		mp.addViewCurrentReservationsPanelButtonListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO set up and go to view current reservations view in
-				// manager panel
+				// set up and go to view current reservations view in manager panel
 				loadAllCurrentReservations();
 				mp.changeCard(ManagerPanel.CURRENT_RESERVATIONS_PANEL);
 			}
@@ -492,8 +489,7 @@ public class HotelController {
 		mp.addViewArchivedReservationsPanelButtonListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO set up and go to view archived reservations view in
-				// manager panel
+				// set up and go to view archived reservations view in manager panel
 				loadAllArchivedReservations();
 				mp.changeCard(ManagerPanel.ARCHIVED_RESERVATIONS_PANEL);
 			}
@@ -501,14 +497,14 @@ public class HotelController {
 		mp.addViewRevenuePanelButtonListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO set up and go to view revenue view in manager panel
+				// set up and go to view revenue view in manager panel
 				mp.changeCard(ManagerPanel.REVENUE_PANEL);
 			}
 		});
 		mp.addCustomerRankingPanelButtonListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO set up ranking panel
+				// set up and go to ranking panel
 				try {
 					ResultSet rankingsResults = model.rankCustomersBooking();
 					ArrayList<Object[]> reservationList = new ArrayList<Object[]>();
@@ -545,10 +541,8 @@ public class HotelController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					// TODO delete selected reservation, then reload new list of
+					// delete selected reservation, then reload new list of
 					// reservations back into the reservation list panel
-					System.err.println("Deleting reservation "
-							+ mpViewCurrentReservationCard.getCurrentlySelectedReservationToCancel());
 					int bookingID = Integer
 							.parseInt(mpViewCurrentReservationCard.getCurrentlySelectedReservationToCancel());
 					HashMap<String, Object> data = new HashMap<String, Object>();
@@ -577,7 +571,7 @@ public class HotelController {
 		mpViewRevenueManagerCard.addYearMonthSubmitButtonListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO check that manager entered valid year / month to get
+				// check that manager entered valid year / month to get
 				// revenue for, then show
 				// the revenues in the view if a valid value was entered
 				if (viewRevenueManagerCardFieldsAreValid()) {

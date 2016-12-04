@@ -18,7 +18,7 @@ public class CustomerRankingManagerCard extends JPanel {
         newBorder.setTitleFont(new Font(null, Font.BOLD, 16));
         setBorder(newBorder);
 
-        // TODO Create content
+        // Create content
         Object[][] sampleDetails = {{"ID", "FN", "LN", "BC", "OR"}};
         setRankingsPane(sampleDetails);
     }
