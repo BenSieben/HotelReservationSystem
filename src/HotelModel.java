@@ -89,15 +89,12 @@ public class HotelModel {
 			int columnsNumber = rsmd.getColumnCount(); // for debugging
 
 			// for debugging
-			/*while (result.next()) {
-				for (int i = 1; i <= columnsNumber; i++) {
-					if (i > 1)
-						System.out.print(",  ");
-					String columnValue = result.getString(i);
-					System.out.print(columnValue + " " + rsmd.getColumnName(i));
-				}
-				System.out.println("");
-			}*/
+			/*
+			 * while (result.next()) { for (int i = 1; i <= columnsNumber; i++)
+			 * { if (i > 1) System.out.print(",  "); String columnValue =
+			 * result.getString(i); System.out.print(columnValue + " " +
+			 * rsmd.getColumnName(i)); } System.out.println(""); }
+			 */
 
 			result.beforeFirst();// move cursor back to beginning
 			return result;
@@ -132,15 +129,12 @@ public class HotelModel {
 			int columnsNumber = rsmd.getColumnCount(); // for debugging
 
 			// for debugging
-			/*while (result.next()) {
-				for (int i = 1; i <= columnsNumber; i++) {
-					if (i > 1)
-						System.out.print(",  ");
-					String columnValue = result.getString(i);
-					System.out.print(columnValue + " " + rsmd.getColumnName(i));
-				}
-				System.out.println("");
-			}*/
+			/*
+			 * while (result.next()) { for (int i = 1; i <= columnsNumber; i++)
+			 * { if (i > 1) System.out.print(",  "); String columnValue =
+			 * result.getString(i); System.out.print(columnValue + " " +
+			 * rsmd.getColumnName(i)); } System.out.println(""); }
+			 */
 
 			result.beforeFirst();// move cursor back to beginning
 			return result;
@@ -151,9 +145,9 @@ public class HotelModel {
 	}
 
 	/*
-	 * Views all current reservations of all customers. 
-	 * Input: none,user session already has customer_id 
-	 * Return: Booking time/changes, startdatetime, end datetime, guests #, room #, room details
+	 * Views all current reservations of all customers. Input: none,user session
+	 * already has customer_id Return: Booking time/changes, startdatetime, end
+	 * datetime, guests #, room #, room details
 	 */
 	public ResultSet viewAllCurrentReservations() {
 		try {
@@ -175,15 +169,12 @@ public class HotelModel {
 			int columnsNumber = rsmd.getColumnCount(); // for debugging
 
 			// for debugging
-			/*while (result.next()) {
-				for (int i = 1; i <= columnsNumber; i++) {
-					if (i > 1)
-						System.out.print(",  ");
-					String columnValue = result.getString(i);
-					System.out.print(columnValue + " " + rsmd.getColumnName(i));
-				}
-				System.out.println("");
-			}*/
+			/*
+			 * while (result.next()) { for (int i = 1; i <= columnsNumber; i++)
+			 * { if (i > 1) System.out.print(",  "); String columnValue =
+			 * result.getString(i); System.out.print(columnValue + " " +
+			 * rsmd.getColumnName(i)); } System.out.println(""); }
+			 */
 
 			result.beforeFirst();// move cursor back to beginning
 			return result;
@@ -192,11 +183,11 @@ public class HotelModel {
 			return null;
 		}
 	}
-	
+
 	/*
-	 * Views all archived reservations of all customers. 
-	 * Input: none,user session already has customer_id 
-	 * Return: Booking time/changes, startdatetime, end datetime, guests #, room #, room details
+	 * Views all archived reservations of all customers. Input: none,user
+	 * session already has customer_id Return: Booking time/changes,
+	 * startdatetime, end datetime, guests #, room #, room details
 	 */
 	public ResultSet viewAllArchivedReservations() {
 		try {
@@ -217,15 +208,12 @@ public class HotelModel {
 			int columnsNumber = rsmd.getColumnCount(); // for debugging
 
 			// for debugging
-			/*while (result.next()) {
-				for (int i = 1; i <= columnsNumber; i++) {
-					if (i > 1)
-						System.out.print(",  ");
-					String columnValue = result.getString(i);
-					System.out.print(columnValue + " " + rsmd.getColumnName(i));
-				}
-				System.out.println("");
-			}*/
+			/*
+			 * while (result.next()) { for (int i = 1; i <= columnsNumber; i++)
+			 * { if (i > 1) System.out.print(",  "); String columnValue =
+			 * result.getString(i); System.out.print(columnValue + " " +
+			 * rsmd.getColumnName(i)); } System.out.println(""); }
+			 */
 
 			result.beforeFirst();// move cursor back to beginning
 			return result;
@@ -234,7 +222,7 @@ public class HotelModel {
 			return null;
 		}
 	}
-	
+
 	/*
 	 * After user enter desired date, this function shall display the available
 	 * rooms. Input: start and end date in HashMap data type, using 'YYYY-MM-DD'
@@ -458,43 +446,45 @@ public class HotelModel {
 		}
 	}
 
-    /**
-     * Finds capacity for room with given booking ID
-     * @param bookingID booking ID to look up
-     * @return Integer.MAX_VALUE if booking_id is bad; or else gives back capacity of room matching the booking ID
-     */
-    public int getCapacityForBooking(int bookingID) {
-        try {
-            // Get room ID from booking ID
-            String query = "SELECT room_id FROM booking_room WHERE booking_id = ?";
-            this.preparedStatement = conn.prepareStatement(query);
-            this.preparedStatement.setObject(1, bookingID);
-            ResultSet roomIDResult = this.preparedStatement.executeQuery();
-            roomIDResult.next();
-            int roomID = roomIDResult.getInt("room_id");
+	/**
+	 * Finds capacity for room with given booking ID
+	 * 
+	 * @param bookingID
+	 *            booking ID to look up
+	 * @return Integer.MAX_VALUE if booking_id is bad; or else gives back
+	 *         capacity of room matching the booking ID
+	 */
+	public int getCapacityForBooking(int bookingID) {
+		try {
+			// Get room ID from booking ID
+			String query = "SELECT room_id FROM booking_room WHERE booking_id = ?";
+			this.preparedStatement = conn.prepareStatement(query);
+			this.preparedStatement.setObject(1, bookingID);
+			ResultSet roomIDResult = this.preparedStatement.executeQuery();
+			roomIDResult.next();
+			int roomID = roomIDResult.getInt("room_id");
 
-            // Get details ID from room ID
-            query = "SELECT details_id FROM room_details WHERE room_id = ?";
-            this.preparedStatement = conn.prepareStatement(query);
-            this.preparedStatement.setObject(1, roomID);
-            ResultSet detailsIDResult = this.preparedStatement.executeQuery();
-            detailsIDResult.next();
-            int detailsID = detailsIDResult.getInt("details_id");
+			// Get details ID from room ID
+			query = "SELECT details_id FROM room_details WHERE room_id = ?";
+			this.preparedStatement = conn.prepareStatement(query);
+			this.preparedStatement.setObject(1, roomID);
+			ResultSet detailsIDResult = this.preparedStatement.executeQuery();
+			detailsIDResult.next();
+			int detailsID = detailsIDResult.getInt("details_id");
 
-            // Get capacity from details ID
-            query = "SELECT capacity FROM details WHERE details_id = ?";
-            this.preparedStatement = conn.prepareStatement(query);
-            this.preparedStatement.setObject(1, detailsID);
-            ResultSet capacityResult = this.preparedStatement.executeQuery();
-            capacityResult.next();
-            return capacityResult.getInt("capacity");
-        }
-        catch(Exception ex) {
-            System.err.println("Unexpected error occurred while trying to find capacity for booking ID " + bookingID);
-            ex.printStackTrace();
-            return Integer.MIN_VALUE;
-        }
-    }
+			// Get capacity from details ID
+			query = "SELECT capacity FROM details WHERE details_id = ?";
+			this.preparedStatement = conn.prepareStatement(query);
+			this.preparedStatement.setObject(1, detailsID);
+			ResultSet capacityResult = this.preparedStatement.executeQuery();
+			capacityResult.next();
+			return capacityResult.getInt("capacity");
+		} catch (Exception ex) {
+			System.err.println("Unexpected error occurred while trying to find capacity for booking ID " + bookingID);
+			ex.printStackTrace();
+			return Integer.MIN_VALUE;
+		}
+	}
 
 	/*
 	 * In case front-end system loses current user ID Input: none Return:
@@ -515,52 +505,62 @@ public class HotelModel {
 		}
 	}
 
-    /**
-     * Returns a String of reservation cost for given startDate, endDate, and dailyCost
-     * @param startDate YYYY-MM-DD formatted String of start date
-     * @param endDate YYYY-MM-DD formatted String of end date
-     * @param dailyCost how much the reserved room costs per day
-     * @return String of total cost, or "ERROR" if an error occurred during calculation
-     */
-    public String calculateReservationCost(String startDate, String endDate, double dailyCost) {
-        try {
-            // Get difference of days between startDate and endDate
-            String query = "SELECT DATEDIFF(?, ?) AS days";
-            this.preparedStatement = conn.prepareStatement(query);
-            this.preparedStatement.setObject(1, endDate);
-            this.preparedStatement.setObject(2, startDate);
-            ResultSet roomIDResult = this.preparedStatement.executeQuery();
-            roomIDResult.next();
-            int reservationNumDays = roomIDResult.getInt("days");
+	/**
+	 * Returns a String of reservation cost for given startDate, endDate, and
+	 * dailyCost
+	 * 
+	 * @param startDate
+	 *            YYYY-MM-DD formatted String of start date
+	 * @param endDate
+	 *            YYYY-MM-DD formatted String of end date
+	 * @param dailyCost
+	 *            how much the reserved room costs per day
+	 * @return String of total cost, or "ERROR" if an error occurred during
+	 *         calculation
+	 */
+	public String calculateReservationCost(String startDate, String endDate, double dailyCost) {
+		try {
+			// Get difference of days between startDate and endDate
+			String query = "SELECT DATEDIFF(?, ?) AS days";
+			this.preparedStatement = conn.prepareStatement(query);
+			this.preparedStatement.setObject(1, endDate);
+			this.preparedStatement.setObject(2, startDate);
+			ResultSet roomIDResult = this.preparedStatement.executeQuery();
+			roomIDResult.next();
+			int reservationNumDays = roomIDResult.getInt("days");
 
-            // Use difference in days and multiply by daily cost to get final result
-            double totalPrice = dailyCost * reservationNumDays;
-            String totalPriceString = "" + totalPrice;
-            if(totalPriceString.indexOf(".") == totalPriceString.length() - 2) {  // only 1 decimal digit; append 0
-                return totalPriceString + "0";
-            }
-            else {  // two (or more) decimal digits; truncate off excess digits
-                return totalPriceString.substring(0, totalPriceString.indexOf(".") + 3);
-            }
-        }
-        catch(Exception ex) {
-            System.err.println("Unexpected error occurred while trying to compute total reservation cost");
-            ex.printStackTrace();
-            return "ERROR";
-        }
-    }
-    
-    /**
-     * Get a list of customers with more than 2 bookings and sort them by booking count.
-     * (No parameters)
-     * @return customer_id, first_name, last_name, booking_count
-     */
-    public ResultSet rankCustomersBooking() {
+			// Use difference in days and multiply by daily cost to get final
+			// result
+			double totalPrice = dailyCost * reservationNumDays;
+			String totalPriceString = "" + totalPrice;
+			if (totalPriceString.indexOf(".") == totalPriceString.length() - 2) { // only
+																					// 1
+																					// decimal
+																					// digit;
+																					// append
+																					// 0
+				return totalPriceString + "0";
+			} else { // two (or more) decimal digits; truncate off excess digits
+				return totalPriceString.substring(0, totalPriceString.indexOf(".") + 3);
+			}
+		} catch (Exception ex) {
+			System.err.println("Unexpected error occurred while trying to compute total reservation cost");
+			ex.printStackTrace();
+			return "ERROR";
+		}
+	}
+
+	/**
+	 * Get a list of customers with more than 2 bookings and sort them by
+	 * booking count. (No parameters)
+	 * 
+	 * @return customer_id, first_name, last_name, booking_count
+	 */
+	public ResultSet rankCustomersBooking() {
 		try {
 			ResultSet result = null;
 			String sql = "SELECT t1.customer_id, t1.first_name, t1.last_name, COUNT(DISTINCT t2.booking_id) AS booking_count "
-					+ "FROM customer t1 "
-					+ "LEFT OUTER JOIN booking_customer t2 ON t2.customer_id = t1.customer_id "
+					+ "FROM customer t1 " + "LEFT OUTER JOIN booking_customer t2 ON t2.customer_id = t1.customer_id "
 					+ "GROUP BY t1.customer_id HAVING COUNT(DISTINCT t2.booking_id) >= 1 "
 					+ "ORDER BY booking_count DESC;";
 
@@ -571,22 +571,43 @@ public class HotelModel {
 			int columnsNumber = rsmd.getColumnCount(); // for debugging
 
 			// for debugging
-			/* while (result.next()) { 
-				 for (int i = 1; i <= columnsNumber; i++)	 
-				 { 
-					 if (i > 1) 
-						 System.out.print(",  "); 
-					 String columnValue = result.getString(i); 
-					 System.out.print(columnValue + " " + rsmd.getColumnName(i));  
-				 }
-				 System.out.println("");
-			 }*/
+			/*
+			 * while (result.next()) { for (int i = 1; i <= columnsNumber; i++)
+			 * { if (i > 1) System.out.print(",  "); String columnValue =
+			 * result.getString(i); System.out.print(columnValue + " " +
+			 * rsmd.getColumnName(i)); } System.out.println(""); }
+			 */
 			result.beforeFirst();// move cursor back to beginning
 			return result;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return null;
 		}
-    }
+	}
 
+	/**
+	 * Gets the total revenue for a year and month
+	 * 
+	 * @return year, month, revenue
+	 */
+	public ResultSet getRevenueForYearAndMonth(String year, String month) {
+		try {
+			ResultSet result = null;
+			// Groups by year and month and sums all the payment amounts per group
+			String sql = "SELECT YEAR(end_date) AS year, MONTH(end_date) AS month, SUM(t1.amount) AS revenue "
+					+ "FROM payment t1, booking_payment t2, booking_period t3, period t4 "
+					+ "WHERE ? = YEAR(end_date) AND ? = MONTH(end_date) AND t1.payment_id = t2.payment_id AND t2.booking_id = t3.booking_id AND t3.period_id = t4.period_id "
+					+ "GROUP BY YEAR(end_date), MONTH(end_date);";
+
+			this.preparedStatement = conn.prepareStatement(sql);
+			this.preparedStatement.setObject(1, year);
+			this.preparedStatement.setObject(2, month);
+			result = this.preparedStatement.executeQuery();
+			
+			return result;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
 }

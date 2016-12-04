@@ -506,13 +506,14 @@ public class HotelController {
 			}
 		});
 		mp.addCustomerRankingPanelButtonListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 				// TODO set up ranking panel
 				try {
 					ResultSet rankingsResults = model.rankCustomersBooking();
 					ArrayList<Object[]> reservationList = new ArrayList<Object[]>();
-					int rank = 1;  // This adds a "rank" column to each ranking (1 = best customer)
+					int rank = 1; // This adds a "rank" column to each ranking
+									// (1 = best customer)
 					while (rankingsResults.next()) {
 						int customerID = rankingsResults.getInt("customer_id");
 						String firstName = rankingsResults.getString("first_name");
@@ -525,13 +526,12 @@ public class HotelController {
 							.toArray(new Object[reservationList.size()][ReservationListPanel.COLUMN_NAMES.length]);
 					mp.getCustomerRankingManagerCard().setRankingsPane(rankingData);
 					mp.changeCard(ManagerPanel.CUSTOMER_RANKINGS_PANEL);
-				}
-				catch(Exception ex) {
+				} catch (Exception ex) {
 					mp.setMessageLabel("Error: unable to load rankings view!");
 					ex.printStackTrace();
 				}
-            }
-        });
+			}
+		});
 	}
 
 	/**
@@ -549,11 +549,14 @@ public class HotelController {
 					// reservations back into the reservation list panel
 					System.err.println("Deleting reservation "
 							+ mpViewCurrentReservationCard.getCurrentlySelectedReservationToCancel());
-					int bookingID = Integer.parseInt(mpViewCurrentReservationCard.getCurrentlySelectedReservationToCancel());
+					int bookingID = Integer
+							.parseInt(mpViewCurrentReservationCard.getCurrentlySelectedReservationToCancel());
 					HashMap<String, Object> data = new HashMap<String, Object>();
 					data.put("booking_id", bookingID);
 					if (model.deleteReservation(data)) {
-						loadAllCurrentReservations(); // Reload all current customer reservations on successful delete
+						loadAllCurrentReservations(); // Reload all current
+														// customer reservations
+														// on successful delete
 					} else {
 						mp.setMessageLabel("Error: unable to delete selected booking!");
 					}
@@ -577,9 +580,49 @@ public class HotelController {
 				// TODO check that manager entered valid year / month to get
 				// revenue for, then show
 				// the revenues in the view if a valid value was entered
-				String yearMonth = mpViewRevenueManagerCard.getYearMonthText();
+				if (viewRevenueManagerCardFieldsAreValid()) {
+					String yearMonth = mpViewRevenueManagerCard.getYearMonthText();
+					String[] date = yearMonth.split("-");
+					String year = date[0];
+					String month = date[1];
+					ResultSet dateAndRevenue = model.getRevenueForYearAndMonth(year, month);
+					Object[][] revenueData = {{"Revenues for month / weeks goes here", "after entering valid date"}};
+					
+					try {
+						if (dateAndRevenue.next() == true) 
+							revenueData = new Object[][]{{month + "/" + year, "$" + dateAndRevenue.getString("revenue")}};
+						
+						// No revenue was generated, set revenue to $0.00
+						else
+							revenueData = new Object[][]{{month + "/" + year, "$0.00"}};
+						mpViewRevenueManagerCard.setRevenuePane(revenueData);
+					} catch (Exception ex) {
+						mp.setMessageLabel("Error: year and month are in an unreadable format!");
+					}
+				}
 			}
 		});
+	}
+
+	/**
+	 * Checks whether or not the fields in pickReservationDateCustomerCard are
+	 * valid
+	 * 
+	 * @return true if all fields are valid; false otherwise
+	 */
+	private boolean viewRevenueManagerCardFieldsAreValid() {
+		// Pull all fields from the date card
+		ViewRevenueManagerCard mpViewRevenueManagerCard = this.view.getManagerPanel().getViewRevenueManagerCard();
+		String yearAndMonth = mpViewRevenueManagerCard.getYearMonthText();
+
+		// Regular expression to test fields against
+		String dateRegex = "^\\d{4}-\\d{2}$";
+
+		// The dates match their regex
+		if (yearAndMonth.matches(dateRegex))
+			return true;
+		return false; // This return catches any case where some bad field is
+						// detected
 	}
 
 	/**
