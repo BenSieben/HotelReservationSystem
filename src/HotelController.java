@@ -26,7 +26,6 @@ public class HotelController {
 	 * able to react
 	 */
 	public void initializeViewListeners() {
-		this.model.rankCustomersBooking();
 		// Listeners on the login panel
 		initializeLoginPanelListeners();
 
