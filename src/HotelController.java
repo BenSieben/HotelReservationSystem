@@ -26,6 +26,7 @@ public class HotelController {
 	 * able to react
 	 */
 	public void initializeViewListeners() {
+		this.model.rankCustomersBooking();
 		// Listeners on the login panel
 		initializeLoginPanelListeners();
 
@@ -356,7 +357,6 @@ public class HotelController {
 					double totalCost = Double.parseDouble(totalCostText);
 					reserveRoomData.put("amount", totalCost);
 
-					System.out.println(reserveRoomData);
 					Object[][] receiptData = { { "Start Date", reserveRoomData.get("start_date") },
 							{ "End Date", reserveRoomData.get("end_date") },
 							{ "Room ID", reserveRoomData.get("room_id") },
