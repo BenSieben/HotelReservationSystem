@@ -220,4 +220,3 @@ BEGIN
     CLOSE old_booking_cursor;
 END//
 DELIMITER ;
-CALL ArchiveBookings(NOW());
