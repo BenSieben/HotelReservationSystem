@@ -610,4 +610,19 @@ public class HotelModel {
 			return null;
 		}
 	}
+
+	/**
+	 * Updates the archives in the database (any old reservations
+	 * not already in the archive get added to the archive)
+	 */
+	public void updateArchives() {
+		try {
+			String sql = "CALL ArchiveBookings(NOW())";
+			this.preparedStatement = conn.prepareStatement(sql);
+			this.preparedStatement.execute();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }

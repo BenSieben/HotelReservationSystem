@@ -179,3 +179,44 @@ LOAD DATA INFILE './initialData/customer.txt' INTO TABLE Customer
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\r\n'
 (first_name, last_name,username,password,age);
+
+-- ArchiveBookings Stored Procedure (send old bookings into archive) --
+DROP PROCEDURE IF EXISTS ArchiveBookings;
+DELIMITER //
+CREATE PROCEDURE ArchiveBookings(IN cutoffDatetime DATETIME)
+BEGIN
+    -- Make a variable to keep track of whether or not cursor below is done looping
+    --   and a variable to store each old booking's id
+    DECLARE loop_finished INTEGER DEFAULT 0;
+    DECLARE old_booking_id BIGINT DEFAULT 0;
+
+    -- Make a cursor to iterate through old bookings which must be moved to archive
+    DECLARE old_booking_cursor CURSOR FOR
+    (SELECT Booking.booking_id
+    FROM Booking, Booking_Period, Period
+    WHERE Booking.booking_id = Booking_Period.booking_id
+        AND Booking_Period.period_id = Period.period_id
+        AND Period.end_date < cutoffDatetime
+        AND Booking.booking_id NOT IN (SELECT Booking_Archive.booking_id FROM Booking_Archive));
+
+    -- Make NOT FOUND handler
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET loop_finished = 1;
+
+    -- Iterate through the old_booking cursor and insert these old into booking_archive and archive
+    --   while deleting them from booking at the same time
+    OPEN old_booking_cursor;
+    move_bookings: LOOP
+        FETCH old_booking_cursor INTO old_booking_id;
+        IF loop_finished = 1 THEN  -- Check for exit loop
+            LEAVE move_bookings;
+        END IF;
+        -- If still iterating, copy old_booking into archive / booking_archive and delete from booking
+        INSERT INTO Archive VALUES (old_booking_id, NOW());
+        INSERT INTO Booking_Archive VALUES (old_booking_id, old_booking_id);
+        -- DELETE FROM Booking WHERE booking_id = old_booking_id;
+    END LOOP move_bookings;
+
+    -- Close the cursor
+    CLOSE old_booking_cursor;
+END//
+DELIMITER ;
