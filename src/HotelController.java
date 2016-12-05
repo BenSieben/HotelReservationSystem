@@ -705,6 +705,7 @@ public class HotelController {
 	 * @return true if load worked, and false if not
 	 */
 	private boolean loadCustomerCurrentReservations() {
+		this.model.updateArchives();  // update the archives
 		CustomerPanel cp = this.view.getCustomerPanel();
 		ViewReservationsCustomerCard cpViewReservationsCard = cp.getViewReservationsCustomerCard();
 		try {
@@ -725,6 +726,7 @@ public class HotelController {
 	 * @return true if load worked, and false if not
 	 */
 	private boolean loadCustomerArchivedReservations() {
+		this.model.updateArchives();  // update the archives
 		CustomerPanel cp = this.view.getCustomerPanel();
 		ViewReservationsCustomerCard cpViewReservationsCard = cp.getViewReservationsCustomerCard();
 		try {
@@ -745,6 +747,7 @@ public class HotelController {
 	 * @return true if load worked, and false if not
 	 */
 	private boolean loadAllCurrentReservations() {
+		this.model.updateArchives();  // update the archives
 		ManagerPanel mp = view.getManagerPanel();
 		ViewCurrentReservationsManagerCard currentReservationsPanel = mp.getViewCurrentReservationsManagerCard();
 		try {
@@ -765,6 +768,7 @@ public class HotelController {
 	 * @return true if load worked, and false if not
 	 */
 	private boolean loadAllArchivedReservations() {
+		this.model.updateArchives();  // update the archives
 		ManagerPanel mp = view.getManagerPanel();
 		ViewArchivedReservationsManagerCard archivedReservationsPanel = mp.getViewArchivedReservationsManagerCard();
 		try {
