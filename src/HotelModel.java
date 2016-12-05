@@ -160,8 +160,11 @@ public class HotelModel {
 			ResultSet result = null;
 			String sql = "SELECT t1.*, t3.start_date, t3.end_date, t4.guests, t5.room_number, t7.* "
 					+ "FROM booking t1, booking_period t2, period t3, booking_room t4, room t5, room_details t6, details t7 "
-					+ "WHERE t1.booking_id = t2.booking_id AND t2.period_id = t3.period_id "
-					+ "AND t4.booking_id = t1.booking_id AND t4.room_id = t5.room_id AND t5.room_id = t6.room_id AND t6.details_id = t7.details_id AND t3.end_date > NOW();";
+					+ "WHERE t1.booking_id = t2.booking_id AND t2.period_id = t3.period_id AND t4.booking_id = t1.booking_id AND t4.room_id = t5.room_id "
+					+ "AND t5.room_id = t6.room_id AND t6.details_id = t7.details_id AND "
+					+ "t1.booking_id NOT IN "
+					+ "(SELECT booking_id FROM booking_archive WHERE booking_id = t1.booking_id) "
+					+ " ORDER BY t3.start_date ASC;";
 			this.preparedStatement = conn.prepareStatement(sql);
 			result = this.preparedStatement.executeQuery();
 

@@ -417,12 +417,12 @@ UNLOCK TABLES;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ArchiveBookings`(IN cutoffDatetime DATETIME)
 BEGIN
-    
-    
+
+
     DECLARE loop_finished INTEGER DEFAULT 0;
     DECLARE old_booking_id BIGINT DEFAULT 0;
 
-    
+
     DECLARE old_booking_cursor CURSOR FOR
     (SELECT Booking.booking_id
     FROM Booking, Booking_Period, Period
@@ -431,24 +431,24 @@ BEGIN
         AND Period.end_date < cutoffDatetime
         AND Booking.booking_id NOT IN (SELECT Booking_Archive.booking_id FROM Booking_Archive));
 
-    
+
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET loop_finished = 1;
 
-    
-    
+
+
     OPEN old_booking_cursor;
     move_bookings: LOOP
         FETCH old_booking_cursor INTO old_booking_id;
-        IF loop_finished = 1 THEN  
+        IF loop_finished = 1 THEN
             LEAVE move_bookings;
         END IF;
-        
+
         INSERT INTO Archive VALUES (old_booking_id, NOW());
         INSERT INTO Booking_Archive VALUES (old_booking_id, old_booking_id);
-        
+
     END LOOP move_bookings;
 
-    
+
     CLOSE old_booking_cursor;
 END ;;
 DELIMITER ;
